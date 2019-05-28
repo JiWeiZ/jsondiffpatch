@@ -18,7 +18,7 @@ class Pipe {
       }
       filter(context);
       if (typeof context === 'object' && context.exiting) {
-        // context.exiting = false;
+        context.exiting = false;
         break;
       }
     }

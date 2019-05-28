@@ -1,4 +1,6 @@
 import DiffContext from '../contexts/diff';
+import PatchContext from '../contexts/patch';
+import ReverseContext from '../contexts/reverse';
 
 import lcs from './lcs';
 
@@ -262,3 +264,222 @@ export const diffFilter = function arraysDiffFilter(context) {
 };
 diffFilter.filterName = 'arrays';
 
+let compare = {
+  numerically(a, b) {
+    return a - b;
+  },
+  numericallyBy(name) {
+    return (a, b) => a[name] - b[name];
+  },
+};
+
+export const patchFilter = function nestedPatchFilter(context) {
+  if (!context.nested) {
+    return;
+  }
+  if (context.delta._t !== 'a') {
+    return;
+  }
+  let index;
+  let index1;
+
+  let delta = context.delta;
+  let array = context.left;
+
+  // first, separate removals, insertions and modifications
+  let toRemove = [];
+  let toInsert = [];
+  let toModify = [];
+  for (index in delta) {
+    if (index !== '_t') {
+      if (index[0] === '_') {
+        // removed item from original array
+        if (delta[index][2] === 0 || delta[index][2] === ARRAY_MOVE) {
+          toRemove.push(parseInt(index.slice(1), 10));
+        } else {
+          throw new Error(
+            `only removal or move can be applied at original array indices,` +
+              ` invalid diff type: ${delta[index][2]}`
+          );
+        }
+      } else {
+        if (delta[index].length === 1) {
+          // added item at new array
+          toInsert.push({
+            index: parseInt(index, 10),
+            value: delta[index][0],
+          });
+        } else {
+          // modified item at new array
+          toModify.push({
+            index: parseInt(index, 10),
+            delta: delta[index],
+          });
+        }
+      }
+    }
+  }
+
+  // remove items, in reverse order to avoid sawing our own floor
+  toRemove = toRemove.sort(compare.numerically);
+  for (index = toRemove.length - 1; index >= 0; index--) {
+    index1 = toRemove[index];
+    let indexDiff = delta[`_${index1}`];
+    let removedValue = array.splice(index1, 1)[0];
+    if (indexDiff[2] === ARRAY_MOVE) {
+      // reinsert later
+      toInsert.push({
+        index: indexDiff[1],
+        value: removedValue,
+      });
+    }
+  }
+
+  // insert items, in reverse order to avoid moving our own floor
+  toInsert = toInsert.sort(compare.numericallyBy('index'));
+  let toInsertLength = toInsert.length;
+  for (index = 0; index < toInsertLength; index++) {
+    let insertion = toInsert[index];
+    array.splice(insertion.index, 0, insertion.value);
+  }
+
+  // apply modifications
+  let toModifyLength = toModify.length;
+  let child;
+  if (toModifyLength > 0) {
+    for (index = 0; index < toModifyLength; index++) {
+      let modification = toModify[index];
+      child = new PatchContext(
+        context.left[modification.index],
+        modification.delta
+      );
+      context.push(child, modification.index);
+    }
+  }
+
+  if (!context.children) {
+    context.setResult(context.left).exit();
+    return;
+  }
+  context.exit();
+};
+patchFilter.filterName = 'arrays';
+
+export const collectChildrenPatchFilter = function collectChildrenPatchFilter(
+  context
+) {
+  if (!context || !context.children) {
+    return;
+  }
+  if (context.delta._t !== 'a') {
+    return;
+  }
+  let length = context.children.length;
+  let child;
+  for (let index = 0; index < length; index++) {
+    child = context.children[index];
+    context.left[child.childName] = child.result;
+  }
+  context.setResult(context.left).exit();
+};
+collectChildrenPatchFilter.filterName = 'arraysCollectChildren';
+
+export const reverseFilter = function arraysReverseFilter(context) {
+  if (!context.nested) {
+    if (context.delta[2] === ARRAY_MOVE) {
+      context.newName = `_${context.delta[1]}`;
+      context
+        .setResult([
+          context.delta[0],
+          parseInt(context.childName.substr(1), 10),
+          ARRAY_MOVE,
+        ])
+        .exit();
+    }
+    return;
+  }
+  if (context.delta._t !== 'a') {
+    return;
+  }
+  let name;
+  let child;
+  for (name in context.delta) {
+    if (name === '_t') {
+      continue;
+    }
+    child = new ReverseContext(context.delta[name]);
+    context.push(child, name);
+  }
+  context.exit();
+};
+reverseFilter.filterName = 'arrays';
+
+let reverseArrayDeltaIndex = (delta, index, itemDelta) => {
+  if (typeof index === 'string' && index[0] === '_') {
+    return parseInt(index.substr(1), 10);
+  } else if (isArray(itemDelta) && itemDelta[2] === 0) {
+    return `_${index}`;
+  }
+
+  let reverseIndex = +index;
+  for (let deltaIndex in delta) {
+    let deltaItem = delta[deltaIndex];
+    if (isArray(deltaItem)) {
+      if (deltaItem[2] === ARRAY_MOVE) {
+        let moveFromIndex = parseInt(deltaIndex.substr(1), 10);
+        let moveToIndex = deltaItem[1];
+        if (moveToIndex === +index) {
+          return moveFromIndex;
+        }
+        if (moveFromIndex <= reverseIndex && moveToIndex > reverseIndex) {
+          reverseIndex++;
+        } else if (
+          moveFromIndex >= reverseIndex &&
+          moveToIndex < reverseIndex
+        ) {
+          reverseIndex--;
+        }
+      } else if (deltaItem[2] === 0) {
+        let deleteIndex = parseInt(deltaIndex.substr(1), 10);
+        if (deleteIndex <= reverseIndex) {
+          reverseIndex++;
+        }
+      } else if (deltaItem.length === 1 && deltaIndex <= reverseIndex) {
+        reverseIndex--;
+      }
+    }
+  }
+
+  return reverseIndex;
+};
+
+export function collectChildrenReverseFilter(context) {
+  if (!context || !context.children) {
+    return;
+  }
+  if (context.delta._t !== 'a') {
+    return;
+  }
+  let length = context.children.length;
+  let child;
+  let delta = {
+    _t: 'a',
+  };
+
+  for (let index = 0; index < length; index++) {
+    child = context.children[index];
+    let name = child.newName;
+    if (typeof name === 'undefined') {
+      name = reverseArrayDeltaIndex(
+        context.delta,
+        child.childName,
+        child.result
+      );
+    }
+    if (delta[name] !== child.result) {
+      delta[name] = child.result;
+    }
+  }
+  context.setResult(delta).exit();
+}
+collectChildrenReverseFilter.filterName = 'arraysCollectChildren';

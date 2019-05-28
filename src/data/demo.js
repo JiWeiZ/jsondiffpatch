@@ -25,3 +25,6 @@ export const demo2 = {
     }
   ]
 }
+
+export const demo3 = [1,2,3,4]
+export const demo4 = [2,3,4,5]

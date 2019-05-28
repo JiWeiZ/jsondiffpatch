@@ -20,7 +20,6 @@ class Processor {
         this.pipes[name] = pipe;
       }
     }
-
     if (name && name.name) {
       pipe = name;
       if (pipe.processor === this) {
@@ -28,7 +27,6 @@ class Processor {
       }
       this.pipes[pipe.name] = pipe;
     }
-
     pipe.processor = this;
     return pipe;
   }
@@ -41,7 +39,6 @@ class Processor {
     let lastContext;
     while (nextPipe) {
       if (typeof context.nextAfterChildren !== 'undefined') {
-      // if (context.nextAfterChildren != undefined) {
         // children processed and coming back to parent
         context.next = context.nextAfterChildren;
         context.nextAfterChildren = null;
