@@ -1,16 +1,16 @@
-import Processor from './processor'
+import Processor from './BenjaminDiff/processor'
 import options from './options'
 import data1 from './data/data1'
 import data2 from './data/data2'
 
-import Pipe from './pipe';
-import DiffContext from './contexts/diff';
+import Pipe from './BenjaminDiff/pipe';
+import DiffContext from './BenjaminDiff/contexts/diff';
 
-import * as trivial from './filters/trivial';
-import * as nested from './filters/nested';
-import * as arrays from './filters/arrays';
-import * as dates from './filters/dates';
-import * as texts from './filters/texts';
+import * as trivial from './BenjaminDiff/filters/trivial';
+import * as nested from './BenjaminDiff/filters/nested';
+import * as arrays from './BenjaminDiff/filters/arrays';
+import * as dates from './BenjaminDiff/filters/dates';
+import * as texts from './BenjaminDiff/filters/texts';
 
 import {demo1, demo2, demo3, demo4} from './data/demo'
 
