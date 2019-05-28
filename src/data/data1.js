@@ -51,7 +51,7 @@ export default {
                           "id": "bulb-text-2",
                           "leaves": [
                               {
-                                  "text": "历史版本",
+                                  "text": "ABCDXY",
                                   "id": "bulb-leave-2",
                               }
                           ]

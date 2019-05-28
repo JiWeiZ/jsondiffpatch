@@ -17,8 +17,8 @@ import {demo1, demo2} from './data/demo'
 import Context from './bulbdiff/Context'
 
 const processor = new Processor(options)
-const diffContext1 = new DiffContext(data1, data2)
-// const diffContext2 = new DiffContext(demo1, demo2)
+// const diffContext1 = new DiffContext(data1, data2)
+const diffContext2 = new DiffContext(demo1, demo2)
 processor.pipe(
   new Pipe('diff')
     .append(
@@ -32,6 +32,6 @@ processor.pipe(
     .shouldHaveResult()
 )
 
-const delta = processor.process(diffContext1)
-// const delta = processor.process(diffContext2)
+// const delta = processor.process(diffContext1)
+const delta = processor.process(diffContext2)
 document.body.innerHTML = JSON.stringify(delta)
