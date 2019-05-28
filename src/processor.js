@@ -20,6 +20,7 @@ class Processor {
         this.pipes[name] = pipe;
       }
     }
+
     if (name && name.name) {
       pipe = name;
       if (pipe.processor === this) {
@@ -27,6 +28,7 @@ class Processor {
       }
       this.pipes[pipe.name] = pipe;
     }
+
     pipe.processor = this;
     return pipe;
   }

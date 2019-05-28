@@ -1,6 +1,4 @@
 import DiffContext from '../contexts/diff';
-import PatchContext from '../contexts/patch';
-import ReverseContext from '../contexts/reverse';
 
 export function collectChildrenDiffFilter(context) {
   if (!context || !context.children) {
@@ -17,9 +15,7 @@ export function collectChildrenDiffFilter(context) {
     result = result || {};
     result[child.childName] = child.result;
   }
-  if (result && context.leftIsArray) {
-    result._t = 'a';
-  }
+
   context.setResult(result).exit();
 }
 collectChildrenDiffFilter.filterName = 'collectChildren';
@@ -63,82 +59,3 @@ export function objectsDiffFilter(context) {
 }
 objectsDiffFilter.filterName = 'objects';
 
-export const patchFilter = function nestedPatchFilter(context) {
-  if (!context.nested) {
-    return;
-  }
-  if (context.delta._t) {
-    return;
-  }
-  let name;
-  let child;
-  for (name in context.delta) {
-    child = new PatchContext(context.left[name], context.delta[name]);
-    context.push(child, name);
-  }
-  context.exit();
-};
-patchFilter.filterName = 'objects';
-
-export const collectChildrenPatchFilter = function collectChildrenPatchFilter(
-  context
-) {
-  if (!context || !context.children) {
-    return;
-  }
-  if (context.delta._t) {
-    return;
-  }
-  let length = context.children.length;
-  let child;
-  for (let index = 0; index < length; index++) {
-    child = context.children[index];
-    if (
-      Object.prototype.hasOwnProperty.call(context.left, child.childName) &&
-      child.result === undefined
-    ) {
-      delete context.left[child.childName];
-    } else if (context.left[child.childName] !== child.result) {
-      context.left[child.childName] = child.result;
-    }
-  }
-  context.setResult(context.left).exit();
-};
-collectChildrenPatchFilter.filterName = 'collectChildren';
-
-export const reverseFilter = function nestedReverseFilter(context) {
-  if (!context.nested) {
-    return;
-  }
-  if (context.delta._t) {
-    return;
-  }
-  let name;
-  let child;
-  for (name in context.delta) {
-    child = new ReverseContext(context.delta[name]);
-    context.push(child, name);
-  }
-  context.exit();
-};
-reverseFilter.filterName = 'objects';
-
-export function collectChildrenReverseFilter(context) {
-  if (!context || !context.children) {
-    return;
-  }
-  if (context.delta._t) {
-    return;
-  }
-  let length = context.children.length;
-  let child;
-  let delta = {};
-  for (let index = 0; index < length; index++) {
-    child = context.children[index];
-    if (delta[child.childName] !== child.result) {
-      delta[child.childName] = child.result;
-    }
-  }
-  context.setResult(delta).exit();
-}
-collectChildrenReverseFilter.filterName = 'collectChildren';
