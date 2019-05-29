@@ -1,9 +1,9 @@
-import { TaskReport } from './TaskReport'
+import { TaskContext } from './TaskContext'
 
 export interface ITaskProps {
   left: any,
   right: any,
-  report?: TaskReport
+  context?: TaskContext
 }
 
 export class Task {
@@ -11,12 +11,12 @@ export class Task {
   right: any
   next: Task
   children: Task[]
-  report: TaskReport;
+  context: TaskContext;
 
   constructor(props: ITaskProps) {
     this.left = props.left
     this.right = props.right
-    this.report = props.report
+    this.context = props.context
     this.next = null
     this.children = []
   }

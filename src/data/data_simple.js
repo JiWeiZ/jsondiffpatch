@@ -1,8 +1,5 @@
 export const data1 = {
   "document": {
-    "id": "bulb-document",
-    "title": "hello world",
-    "type": "document",
     "nodes": [
       {
         "id": "bulb-block-1",
@@ -29,9 +26,6 @@ export const data1 = {
 
 export const data2 = {
   "document": {
-    "id": "bulb-document",
-    "title": "hello world",
-    "type": "document",
     "nodes": [
       {
         "id": "bulb-block-1",

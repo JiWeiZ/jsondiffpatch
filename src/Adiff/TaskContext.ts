@@ -5,45 +5,45 @@ import {
   textWorker,
   primitiveWorker
 } from "./Worker";
-export interface ITaskReport {
+export interface ITaskContext {
   callback?: (any) => any
 }
 
-export abstract class TaskReport {
+export abstract class TaskContext {
   worker: Worker
   callback: (any: any) => any;
-  constructor(props: ITaskReport) {
+  constructor(props: ITaskContext) {
     this.callback = props.callback
   }
 }
 
-export interface IObjTaskReportProps {
+export interface IObjTaskContextProps {
   objType: string,
   callback?: (any) => any
 }
 
-export class ObjTaskReport extends TaskReport {
+export class ObjTaskContext extends TaskContext {
   worker: any;
   objType: string;
-  constructor(props: IObjTaskReportProps) {
+  constructor(props: IObjTaskContextProps) {
     super(props)
     this.worker = objWorker
     this.objType = props.objType
   }
 }
 
-export interface IArrayTaskReportProps {
+export interface IArrayTaskContextProps {
   arrayType: string,
   elementIdentifier: string,
   callback?: (any) => any
 }
 
-export class ArrayTaskReport extends TaskReport {
+export class ArrayTaskContext extends TaskContext {
   worker: any;
   objType: string;
   arrayType: string;
   elementIdentifier: string;
-  constructor(props: IArrayTaskReportProps) {
+  constructor(props: IArrayTaskContextProps) {
     super(props)
     this.worker = arrayWorker
     this.arrayType = props.arrayType
@@ -56,16 +56,16 @@ export enum TEXT_DIFF_AlGORITHM{
   GOOGLE_DIFF = 1,
 }
 
-export interface ITextTaskReportProps {
+export interface ITextTaskContextProps {
   textDiffAlgorithm: TEXT_DIFF_AlGORITHM,
   callback?: (any) => any
 }
 
-export class TextTaskReport extends TaskReport {
+export class TextTaskContext extends TaskContext {
   worker: any;
 
   textDiffAlgorithm: TEXT_DIFF_AlGORITHM;
-  constructor(props: ITextTaskReportProps) {
+  constructor(props: ITextTaskContextProps) {
     super(props)
     this.worker = textWorker
     this.textDiffAlgorithm = props.textDiffAlgorithm

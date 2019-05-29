@@ -1,4 +1,9 @@
+import { Task } from "../Task";
+
 class TextWorker {
+  public handle = (task: Task) => {
+
+  }
 
 }
 

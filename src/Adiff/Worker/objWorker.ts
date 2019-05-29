@@ -1,5 +1,5 @@
 import { Task } from "../Task";
-import { TaskReport, ObjTaskReport, TEXT_DIFF_AlGORITHM, TextTaskReport, ArrayTaskReport } from '../TaskReport'
+import { TaskContext, ObjTaskContext, TEXT_DIFF_AlGORITHM, TextTaskContext, ArrayTaskContext } from '../TaskContext'
 import { taskAssignor, getType } from '../util/taskAssignor'
 import {
   arrayWorker,
@@ -11,9 +11,9 @@ class ObjWorker {
 
   public handle(task: Task) {
     const { left, right } = task
-    const objType = (task.report as ObjTaskReport).objType
+    const objType = (task.context as ObjTaskContext).objType
 
-    for (let key of left) {
+    for (let key of Object.keys(left)) {
       let newTask = this.getNewTask(objType, key, left, right)
       task.assignToSub(newTask)
     }
@@ -26,45 +26,45 @@ class ObjWorker {
     const leftValueType = getType(leftValue)
     const rightValueType = getType(rightValue)
 
-    let newReport: TaskReport
+    let newContext: TaskContext
     if (leftValueType === "string" && rightValueType === "string") {
-      newReport = this.createTextTaskReport(objType, key)
+      newContext = this.createTextTaskContext(objType, key)
     }
 
     if (leftValueType === "array" && rightValueType === "array") {
-      newReport = this.createArrayTaskReport(objType, key)
+      newContext = this.createArrayTaskContext(objType, key)
     }
 
     if (leftValueType === "object" && rightValueType === "object") {
-      newReport = this.createObjTaskReport(objType, key)
+      newContext = this.createObjTaskContext(objType, key)
     }
 
     return new Task({
       left: leftValue,
       right: rightValue,
-      report: newReport
+      context: newContext
     })
   }
 
-  private createArrayTaskReport = (objType, key) => {
-    return new ArrayTaskReport({
+  private createArrayTaskContext = (objType, key) => {
+    return new ArrayTaskContext({
       arrayType: key,
       elementIdentifier: key === "marks" ? "type" : "id"
     })
   }
 
-  private createObjTaskReport = (objType, key) => {
-    return new ObjTaskReport({
+  private createObjTaskContext = (objType, key) => {
+    return new ObjTaskContext({
       objType
     })
   }
 
-  private createTextTaskReport = (objType, key) => {
+  private createTextTaskContext = (objType, key) => {
     const textDiffAlgorithm = key === "text" && objType === "leaf"
       ? TEXT_DIFF_AlGORITHM.GOOGLE_DIFF
       : TEXT_DIFF_AlGORITHM.PLAIN_DIFF
 
-    return new TextTaskReport({
+    return new TextTaskContext({
       textDiffAlgorithm
     })
   }

@@ -8,9 +8,9 @@ import {
 
 export const taskAssignor = (task: Task) => {
   if (
-    task.report &&
-    task.report.worker) {
-    return task.report.worker
+    task.context &&
+    task.context.worker) {
+    return task.context.worker
   }
 
   const leftType = getType(task.left)
