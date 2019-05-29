@@ -1,5 +1,11 @@
 import { Task } from "../Task";
+import { TaskReport } from '../TaskReport'
 import { taskAssignor, getType } from '../util/taskAssignor'
+import {
+  arrayWorker,
+  textWorker,
+  primitiveWorker
+} from "../Worker";
 
 class ObjWorker {
   public handle(task: Task) {
@@ -12,9 +18,12 @@ class ObjWorker {
       const rightValueType = getType(rightValue)
 
       if (leftValueType === "array" && rightValueType === "array") {
-        const report = {
+        const newTask = new Task({
+          left: left[key],
+          right: right[key],
+        })
 
-        }
+        task.assignToSub(newTask)
       }
 
       if (leftValueType === "object" && rightValueType === "object") {
@@ -22,24 +31,12 @@ class ObjWorker {
       }
 
       if (leftValueType === "string" && rightValueType === "string") {
-
       }
-
-
-
-
-
-
-
-
-
     }
-
-
   }
 }
 
-let objWorker
+let objWorker: ObjWorker
 if (!objWorker) {
   objWorker = new ObjWorker()
 }

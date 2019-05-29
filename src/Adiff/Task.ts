@@ -3,7 +3,7 @@ import { TaskReport } from './TaskReport'
 export interface ITaskProps {
   left: any,
   right: any,
-  reports?: TaskReport[]
+  report?: TaskReport
 }
 
 export class Task {
@@ -12,21 +12,19 @@ export class Task {
   next: Task
   reports: TaskReport[]
   children: Task[]
+  report: TaskReport;
 
   constructor(props: ITaskProps) {
     this.left = props.left
     this.right = props.right
+    this.report = props.report
     this.next = null
-    this.reports = props.reports.concat()
+    this.reports = []
     this.children = []
   }
 
-  public setReport(report: TaskReport) {
-    this.reports = this.reports.concat(report)
-    return this
-  }
-
   public assignToSub(child: Task) {
+    child.reports = this.reports.concat(child.report)
     this.insertAfter(child, this.children.length ? this.getLastChild() : this)
     this.children.push(child)
     return this
