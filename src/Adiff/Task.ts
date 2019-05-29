@@ -10,7 +10,6 @@ export class Task {
   left: any
   right: any
   next: Task
-  reports: TaskReport[]
   children: Task[]
   report: TaskReport;
 
@@ -19,12 +18,10 @@ export class Task {
     this.right = props.right
     this.report = props.report
     this.next = null
-    this.reports = []
     this.children = []
   }
 
   public assignToSub(child: Task) {
-    child.reports = this.reports.concat(child.report)
     this.insertAfter(child, this.children.length ? this.getLastChild() : this)
     this.children.push(child)
     return this

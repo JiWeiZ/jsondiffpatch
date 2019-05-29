@@ -52,22 +52,22 @@ export class ArrayTaskReport extends TaskReport {
 }
 
 export enum TEXT_DIFF_AlGORITHM{
-  PLAIN = 0,
+  PLAIN_DIFF = 0,
   GOOGLE_DIFF = 1,
 }
 
 export interface ITextTaskReportProps {
-  handleStrategy: TEXT_DIFF_AlGORITHM,
+  textDiffAlgorithm: TEXT_DIFF_AlGORITHM,
   callback?: (any) => any
 }
 
 export class TextTaskReport extends TaskReport {
   worker: any;
 
-  handleStrategy: TEXT_DIFF_AlGORITHM;
+  textDiffAlgorithm: TEXT_DIFF_AlGORITHM;
   constructor(props: ITextTaskReportProps) {
     super(props)
     this.worker = textWorker
-    this.handleStrategy = props.handleStrategy
+    this.textDiffAlgorithm = props.textDiffAlgorithm
   }
 }

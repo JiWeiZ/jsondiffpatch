@@ -8,10 +8,9 @@ import {
 
 export const taskAssignor = (task: Task) => {
   if (
-    task.reports &&
-    task.reports.length &&
-    task.reports[task.reports.length - 1].worker) {
-    return task.reports[task.reports.length - 1].worker
+    task.report &&
+    task.report.worker) {
+    return task.report.worker
   }
 
   const leftType = getType(task.left)
