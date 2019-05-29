@@ -8,7 +8,7 @@ const task = new Task({
   left: data1,
   right: data2,
   context: new ObjTaskContext({
-    objType: "document"
+    objType: "data"
   })
 })
 
