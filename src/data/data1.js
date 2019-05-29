@@ -34,31 +34,31 @@ export default {
         ]
       },
       {
-          "type": "block",
-          "id": "bulb-block-2",
-          "name": "todo",
-          "data": {
-              "checked": false
-          },
-          "nodes": [
+        "type": "block",
+        "id": "bulb-block-2",
+        "name": "todo",
+        "data": {
+          "checked": false
+        },
+        "nodes": [
+          {
+            "type": "block",
+            "id": "bulb-block-3",
+            "name": "paragraph",
+            "nodes": [
               {
-                  "type": "block",
-                  "id": "bulb-block-3",
-                  "name": "paragraph",
-                  "nodes": [
-                      {
-                          "type": "text",
-                          "id": "bulb-text-2",
-                          "leaves": [
-                              {
-                                  "text": "ABCDXY",
-                                  "id": "bulb-leave-2",
-                              }
-                          ]
-                      }
-                  ]
+                "type": "text",
+                "id": "bulb-text-2",
+                "leaves": [
+                  {
+                    "id": "bulb-leave-2",
+                    "text": "ABCDXY",
+                  }
+                ]
               }
-          ]
+            ]
+          }
+        ]
       },
     ]
   }
