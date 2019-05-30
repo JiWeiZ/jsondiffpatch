@@ -7,10 +7,11 @@ import {
  } from '../Task'
 
 import {
-  objWorker,
+  objectWorker,
   arrayWorker,
   textWorker,
-  primitiveWorker
+  primitiveWorker,
+  Worker,
 } from "../Worker";
 
 
@@ -21,7 +22,7 @@ export const taskAssignor = (task: Task) => {
   }
 
   if (task instanceof ObjectTask) {
-    return objWorker
+    return objectWorker
   }
 
   if (task instanceof PrimitiveTask) {

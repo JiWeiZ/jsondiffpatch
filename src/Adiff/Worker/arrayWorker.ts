@@ -13,4 +13,4 @@ if (!arrayWorker) {
   arrayWorker = new ArrayWorker()
 }
 
-export default arrayWorker
+export { arrayWorker }

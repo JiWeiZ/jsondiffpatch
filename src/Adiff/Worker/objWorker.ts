@@ -8,9 +8,9 @@ export class ObjectWorker extends Worker {
 
 }
 
-let objectWorker
+let objectWorker: ObjectWorker
 if (!objectWorker) {
   objectWorker = new ObjectWorker()
 }
 
-export default objectWorker
+export { objectWorker }

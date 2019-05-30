@@ -8,9 +8,9 @@ export class PrimitiveWorker extends Worker {
 
 }
 
-let primitiveWorker
+let primitiveWorker: PrimitiveWorker
 if (!primitiveWorker) {
   primitiveWorker = new PrimitiveWorker()
 }
 
-export default primitiveWorker
+export { primitiveWorker }

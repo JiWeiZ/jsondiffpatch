@@ -8,7 +8,7 @@ export class TextWorker extends Worker {
 
 }
 
-let textWorker
+let textWorker: TextWorker
 if (!textWorker) {
   textWorker = new TextWorker()
 }

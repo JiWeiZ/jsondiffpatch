@@ -1,3 +1,5 @@
+import { Task } from "../Task";
+
 export abstract class Worker {
-  constructor() {}
+  public handle(task: Task): any { }
 }
