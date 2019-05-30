@@ -10,11 +10,9 @@ const task = new ObjectTask({
   type: "data",
   omitKeys: ["type", "id", "readonly"]
 })
-window.data2 = data2
 
 const manager = new Manager()
 manager.hanlde(task)
-window.results = manager.results
 console.log(manager.results)
 
 const getTarget = (path, data)=> {

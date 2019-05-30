@@ -11,6 +11,9 @@ export class TextTask extends Task {
   }
 
   setResult(props: IResultProps) {
+    if (props.left === props.right) {
+      return
+    }
     this.result = new Result({
       path: props.path,
       left: props.left,
