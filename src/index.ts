@@ -1,5 +1,5 @@
 import { Manager } from './Adiff/Manager'
-import { Task } from './Adiff/Task'
+import { Task } from './Adiff/Task/Task'
 
 import { data1, data2 } from './data/data_simple.js'
 import { ObjTaskContext } from './Adiff/TaskContext'

@@ -1,22 +1,19 @@
-import { TaskContext } from './TaskContext'
+import { TaskContext } from '../TaskContext'
 
 export interface ITaskProps {
   left: any,
   right: any,
-  context?: TaskContext
 }
 
-export class Task {
+export abstract class Task {
   left: any
   right: any
   next: Task
   children: Task[]
-  context: TaskContext;
 
   constructor(props: ITaskProps) {
     this.left = props.left
     this.right = props.right
-    this.context = props.context
     this.next = null
     this.children = []
   }
