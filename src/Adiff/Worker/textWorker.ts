@@ -1,8 +1,7 @@
-import { Task } from "../Task/Task";
-import { TextTaskContext, TEXT_DIFF_AlGORITHM } from "../TaskContext";
-import dmp from 'diff-match-patch';
+import { Task } from "../Task";
+import { Worker } from './Worker'
 
-export class TextWorker {
+export class TextWorker extends Worker {
   public handle = (task: Task) => {
 
   }

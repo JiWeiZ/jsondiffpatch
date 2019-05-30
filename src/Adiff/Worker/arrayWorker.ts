@@ -1,22 +1,14 @@
-import { Task } from "../Task/Task";
-import { TaskContext, ObjTaskContext, TEXT_DIFF_AlGORITHM, TextTaskContext, ArrayTaskContext } from '../TaskContext'
-import { getType } from '../util/getType'
+import { Task } from "../Task";
+import { Worker } from './Worker'
 
-
-export class ArrayWorker {
-
-  public handle(task: Task) {
-
-
-  }
-
-  private isItemsMatch(array1, array2, idx1, idx2, itemIdentifier) {
+export class ArrayWorker extends Worker {
+  public handle = (task: Task) => {
 
   }
 
 }
 
-let arrayWorker: ArrayWorker
+let arrayWorker
 if (!arrayWorker) {
   arrayWorker = new ArrayWorker()
 }
