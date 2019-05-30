@@ -1,11 +1,11 @@
-import { Task } from "../Task";
+import { Task, TextTask } from "../Task";
 import { Worker } from './Worker'
 
 export class TextWorker extends Worker {
-  public handle = (task: Task) => {
-
+  public handle = (task: TextTask) => {
+    const { left, right, path } = task
+    task.setResult({ left, right, path })
   }
-
 }
 
 let textWorker: TextWorker

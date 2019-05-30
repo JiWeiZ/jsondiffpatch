@@ -8,26 +8,17 @@ export abstract class Task {
   right: any
   next: Task
   children: Task[]
+  path: string[];
 
   constructor(props: ITaskProps) {
     this.left = props.left
     this.right = props.right
     this.next = null
     this.children = []
+    this.path = []
   }
 
-  public assignToSub(child: Task) {
-    this.insertAfter(child, this.children.length ? this.getLastChild() : this)
-    this.children.push(child)
-    return this
-  }
-
-  private insertAfter(task: Task, target: Task) {
-    task.next = target.next
-    target.next = task
-  }
-
-  private getLastChild() {
+  protected getLastChild() {
     if (!this.children.length) {
       return
     }

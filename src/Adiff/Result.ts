@@ -1,15 +1,17 @@
+export interface IResultProps {
+  path: string[]
+  left: any
+  right: any
+}
+
 export class Result {
   path: string[];
   left: any;
   right: any;
 
-  constructor() {
-    this.path = []
-    this.left = undefined
-    this.right = undefined
-  }
-
-  public addToPath (item: string) {
-    this.path.push(item)
+  constructor(props: IResultProps) {
+    this.path = props.path
+    this.left = props.left
+    this.right = props.right
   }
 }

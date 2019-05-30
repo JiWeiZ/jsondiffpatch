@@ -1,4 +1,4 @@
-import { Task } from "./Task";
+import { Task, PrimitiveTask, TextTask } from "./Task";
 import { Worker } from "./Worker";
 import { taskAssignor } from './util/taskAssignor'
 import { Result } from "./Result";
@@ -13,6 +13,12 @@ export class Manager {
     do {
       worker = taskAssignor(task)
       worker.handle(task)
+
+      const res = (task as PrimitiveTask | TextTask).result
+      if (res) {
+        this.results.push(res)
+      }
+
       task = task.next
     } while (task)
   }

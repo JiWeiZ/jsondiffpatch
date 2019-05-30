@@ -1,10 +1,19 @@
 import { Task, ITaskProps } from "./Task";
-
-export interface IPrimitiveTaskProps extends ITaskProps{
+import { Result, IResultProps } from '../Result'
+export interface IPrimitiveTaskProps extends ITaskProps {
 }
 
 export class PrimitiveTask extends Task {
+  result: Result;
   constructor(props: IPrimitiveTaskProps) {
     super(props)
+  }
+
+  setResult(props: IResultProps) {
+    this.result = new Result({
+      path: props.path,
+      left: props.left,
+      right: props.right
+    })
   }
 }
