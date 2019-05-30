@@ -1,6 +1,4 @@
 import { Task, PrimitiveTask, TextTask } from "./Task";
-import { Worker } from "./Worker";
-import { taskAssignor } from './util/taskAssignor'
 import { Result } from "./Result";
 
 export class Manager {
@@ -9,11 +7,8 @@ export class Manager {
     this.results = []
   }
   public hanlde(task: Task) {
-    let worker: Worker
     do {
-      worker = taskAssignor(task)
-      worker.handle(task)
-
+      task.handle()
       const res = (task as PrimitiveTask | TextTask).result
       if (res) {
         this.results.push(res)

@@ -10,7 +10,12 @@ export class TextTask extends Task {
     super(props)
   }
 
-  setResult(props: IResultProps) {
+  public handle = () => {
+    const { left, right, path } = this
+    this.setResult({ left, right, path })
+  }
+
+  private setResult(props: IResultProps) {
     if (props.left === props.right) {
       return
     }

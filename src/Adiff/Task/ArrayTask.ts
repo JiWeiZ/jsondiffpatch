@@ -1,4 +1,5 @@
 import { Task, ITaskProps } from "./Task";
+import { ObjectTask } from "./ObjectTask";
 
 export interface IArrayTaskProps extends ITaskProps {
   type: string
@@ -28,5 +29,27 @@ export class ArrayTask extends Task {
 
   public setChildPath(child: Task, key: string): void {
     child.path = this.path.concat(key)
+  }
+
+  public handle = () => {
+    const { left, right, itemIdentifier } = this
+    const leftItemIdentifiers = left.map(e => e[itemIdentifier])
+    const rightItemIdentifiers = right.map(e => e[itemIdentifier])
+
+    for (let ir = 0; ir < right.length; ir++) {
+      const itemRight = right[ir]
+      const rightItemIdentifier = itemRight[itemIdentifier]
+      const il = leftItemIdentifiers.indexOf(rightItemIdentifier)
+      const itemLeft = left[il]
+
+      const newTask = new ObjectTask({
+        type: ir.toString(),
+        left: itemLeft,
+        right: itemRight
+      })
+
+      this.assignToSub(newTask)
+      this.setChildPath(newTask, ir.toString())
+    }
   }
 }

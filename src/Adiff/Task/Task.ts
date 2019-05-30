@@ -18,10 +18,22 @@ export abstract class Task {
     this.path = []
   }
 
+  public handle(): void {
+  }
+
   protected getLastChild() {
     if (!this.children.length) {
       return
     }
     return this.children[this.children.length - 1]
+  }
+
+  protected getType = (target: any) => {
+    if (typeof target === "object") {
+      return Array.isArray(target)
+        ? "array"
+        : "object"
+    }
+    return typeof target
   }
 }
