@@ -2,7 +2,7 @@ import { Task } from "../Task/Task";
 import { TextTaskContext, TEXT_DIFF_AlGORITHM } from "../TaskContext";
 import dmp from 'diff-match-patch';
 
-class TextWorker {
+export class TextWorker {
   public handle = (task: Task) => {
 
   }

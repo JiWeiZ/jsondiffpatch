@@ -1,15 +1,14 @@
 import { Manager } from './Adiff/Manager'
 import { Task } from './Adiff/Task/Task'
+import { ObjectTask } from './Adiff/Task/ObjectTask'
 
 import { data1, data2 } from './data/data_simple.js'
-import { ObjTaskContext } from './Adiff/TaskContext'
 
-const task = new Task({
+const task = new ObjectTask({
   left: data1,
   right: data2,
-  context: new ObjTaskContext({
-    objType: "data"
-  })
+  type: "data",
+  omitKeys: ["type", "id", "readonly"]
 })
 
 const manager = new Manager()

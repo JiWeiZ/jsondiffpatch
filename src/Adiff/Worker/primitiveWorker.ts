@@ -1,4 +1,4 @@
-class PrimitiveWorker {
+export class PrimitiveWorker {
 
 }
 

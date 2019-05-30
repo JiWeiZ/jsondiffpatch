@@ -1,9 +1,9 @@
 import { Task } from "../Task/Task";
 import { TaskContext, ObjTaskContext, TEXT_DIFF_AlGORITHM, TextTaskContext, ArrayTaskContext } from '../TaskContext'
-import { getType } from '../util/taskAssignor'
+import { getType } from '../util/getType'
 
 
-class ArrayWorker {
+export class ArrayWorker {
 
   public handle(task: Task) {
 

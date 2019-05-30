@@ -1,4 +1,11 @@
-import { Task } from '../Task/Task'
+import {
+  Task,
+  ArrayTask,
+  ObjectTask,
+  PrimitiveTask,
+  TextTask
+ } from '../Task'
+
 import {
   objWorker,
   arrayWorker,
@@ -6,36 +13,23 @@ import {
   primitiveWorker
 } from "../Worker";
 
+
 export const taskAssignor = (task: Task) => {
-  if (
-    task.context &&
-    task.context.worker) {
-    return task.context.worker
-  }
 
-  const leftType = getType(task.left)
-  const rightType = getType(task.right)
-
-  if (leftType === 'object' && rightType === 'object') {
-    return objWorker
-  }
-
-  if (leftType === 'array' && rightType === 'array') {
+  if (task instanceof ArrayTask) {
     return arrayWorker
   }
 
-  if (leftType === 'string' && rightType === 'string') {
+  if (task instanceof ObjectTask) {
+    return objWorker
+  }
+
+  if (task instanceof PrimitiveTask) {
+    return primitiveWorker
+  }
+
+  if (task instanceof TextTask) {
     return textWorker
   }
-
-  return primitiveWorker
 }
 
-export const getType = (target) => {
-  if (typeof target === "object") {
-    return Array.isArray(target)
-      ? "array"
-      : "object"
-  }
-  return typeof target
-}

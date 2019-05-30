@@ -1,13 +1,14 @@
 import { Task } from "../Task/Task";
 import { TaskContext, ObjTaskContext, TEXT_DIFF_AlGORITHM, TextTaskContext, ArrayTaskContext } from '../TaskContext'
-import { taskAssignor, getType } from '../util/taskAssignor'
+import { taskAssignor } from '../util/taskAssignor'
+import { getType } from '../util/getType'
 import {
   arrayWorker,
   textWorker,
   primitiveWorker
 } from "../Worker";
 
-class ObjWorker {
+export class ObjWorker {
 
   public handle(task: Task) {
   }
