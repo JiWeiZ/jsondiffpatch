@@ -1,5 +1,3 @@
-import { TaskContext } from '../TaskContext'
-
 export interface ITaskProps {
   left: any,
   right: any,

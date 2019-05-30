@@ -5,10 +5,9 @@ export class ArrayWorker extends Worker {
   public handle = (task: Task) => {
 
   }
-
 }
 
-let arrayWorker
+let arrayWorker: ArrayWorker
 if (!arrayWorker) {
   arrayWorker = new ArrayWorker()
 }

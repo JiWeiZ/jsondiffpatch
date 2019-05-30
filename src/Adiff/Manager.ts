@@ -9,7 +9,7 @@ export class Manager {
     this.results = []
   }
   public hanlde(task: Task) {
-    let worker
+    let worker: Worker
     do {
       worker = taskAssignor(task)
       worker.handle(task)

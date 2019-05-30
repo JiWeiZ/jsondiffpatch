@@ -15,7 +15,7 @@ import {
 } from "../Worker";
 
 
-export const taskAssignor = (task: Task) => {
+export const taskAssignor = (task: Task): Worker => {
 
   if (task instanceof ArrayTask) {
     return arrayWorker

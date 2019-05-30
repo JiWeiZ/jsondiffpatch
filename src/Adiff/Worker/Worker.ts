@@ -1,5 +1,5 @@
 import { Task } from "../Task";
 
 export abstract class Worker {
-  public handle(task: Task): any { }
+  public handle(task: Task): void { }
 }
