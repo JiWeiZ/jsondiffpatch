@@ -18,10 +18,6 @@ export class PrimitiveTask extends Task {
     if (props.left === props.right) {
       return
     }
-    this.result = new Result({
-      path: props.path,
-      left: props.left,
-      right: props.right
-    })
+    this.result = new Result(props)
   }
 }

@@ -1,4 +1,4 @@
-import { Task, PrimitiveTask, TextTask } from "./Task";
+import { Task, PrimitiveTask, TextTask, ObjectTask } from "./Task";
 import { Result } from "./Result";
 
 export class Manager {
@@ -6,14 +6,25 @@ export class Manager {
   constructor() {
     this.results = []
   }
-  public hanlde(task: Task) {
+
+  public diff(left, right) {
+    const task = new ObjectTask({
+      left,
+      right,
+      type: "data",
+      omitKeys: ["type", "id", "readonly"]
+    })
+    this.hanlde(task)
+    return this.results
+  }
+
+  private hanlde(task: Task) {
     do {
       task.handle()
       const res = (task as PrimitiveTask | TextTask).result
       if (res) {
         this.results.push(res)
       }
-
       task = task.next
     } while (task)
   }

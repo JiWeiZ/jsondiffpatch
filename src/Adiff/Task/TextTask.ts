@@ -1,7 +1,7 @@
 import { Task, ITaskProps } from "./Task";
 import { Result, IResultProps } from "../Result";
 
-export interface ITextTaskProps extends ITaskProps{
+export interface ITextTaskProps extends ITaskProps {
 }
 
 export class TextTask extends Task {
@@ -19,10 +19,6 @@ export class TextTask extends Task {
     if (props.left === props.right) {
       return
     }
-    this.result = new Result({
-      path: props.path,
-      left: props.left,
-      right: props.right
-    })
+    this.result = new Result(props)
   }
 }

@@ -23,12 +23,6 @@ export class ObjectTask extends Task {
     return this
   }
 
-  private setChildNext = (child: Task) => {
-    const target = this.children.length ? this.getLastChild() : this
-    child.next = target.next
-    target.next = child
-  }
-
   public setChildPath = (child: Task, key: string): void => {
     child.path = this.path.concat(key)
   }
@@ -83,7 +77,6 @@ export class ObjectTask extends Task {
 
       const leftValue = left[key]
       const rightValue = right[key]
-      const leftValueType = this.getType(leftValue)
       const rightValueType = this.getType(rightValue)
 
       if (rightValueType === "undefined") {
@@ -95,7 +88,11 @@ export class ObjectTask extends Task {
         this.setChildPath(newTask, key)
       }
     }
+  }
 
-
+  private setChildNext = (child: Task) => {
+    const target = this.children.length ? this.getLastChild() : this
+    child.next = target.next
+    target.next = child
   }
 }
