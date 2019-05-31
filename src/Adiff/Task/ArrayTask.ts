@@ -118,15 +118,22 @@ export class ArrayTask extends Task {
     for (let i = unMatchHead; i < len1 - unMatchTail; i++) {
       if (!LCS.indices1.includes(i - unMatchHead)) {
         this.assignNewTask({
-          left: array1[index],
+          left: array1[i],
           right: undefined,
-          type: '' + index
+          type: '' + i
         })
       }
     }
 
-
-
+    for (let i = unMatchHead; i < len2 - unMatchTail; i++) {
+      if (!LCS.indices2.includes(i - unMatchHead)) {
+        this.assignNewTask({
+          left: undefined,
+          right: array2[i],
+          type: '' + i
+        })
+      }
+    }
   }
 
   private assignNewTask = (
