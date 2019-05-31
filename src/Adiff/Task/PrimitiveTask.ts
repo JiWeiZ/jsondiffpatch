@@ -1,20 +1,15 @@
-import { Task, ITaskProps } from "./Task";
+import { AtomicTask } from "./Task";
 import { Result, IResultProps } from '../Result'
-export interface IPrimitiveTaskProps extends ITaskProps {
-}
 
-export class PrimitiveTask extends Task {
+export class PrimitiveTask extends AtomicTask {
   result: Result;
-  constructor(props: IPrimitiveTaskProps) {
-    super(props)
-  }
 
   public handle = () => {
     const { left, right, path } = this
     this.setResult({ left, right, path })
   }
 
-  private setResult(props: IResultProps) {
+  public setResult = (props: IResultProps): void => {
     const { left, right } = props
 
     if (

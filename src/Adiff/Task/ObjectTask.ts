@@ -1,4 +1,4 @@
-import { Task, ITaskProps, AssignableTask } from "./Task";
+import { ITaskProps, AssignableTask } from "./Task";
 import { ArrayTask } from "./ArrayTask";
 import { PrimitiveTask } from "./PrimitiveTask";
 import { TextTask } from "./TextTask";
@@ -19,26 +19,35 @@ export class ObjectTask extends AssignableTask {
 
   public handle = (): void => {
     const { left, right } = this
-    this.handleItem(left)
+    this.handleItem(left).handleItem(right)
   }
 
-  private handleItem = (target) => {
+  public handleItem = (target) => {
     for (let key of Object.keys(target)) {
       if (this.omitKeys.includes(key)) {
         continue
       }
 
-      this.assignNewTask({
-        left: this.left[key],
-        right: this.right[key],
-        type: key
-      })
+      if (
+        target === this.left ||
+        target === this.right && this.right[key] === undefined
+      ) {
+        this.assignNewTask({
+          left: this.left[key],
+          right: this.right[key],
+          type: key
+        })
+      }
     }
     return this
   }
 
   private assignNewTask = (props: ITaskProps) => {
-    const newTask = this.getNewTask(props)
+    const newTask = this.getNewTask({
+      left: props.left,
+      right: props.right,
+      type: props.type
+    })
     this.assignToSub(newTask, props.type)
   }
 

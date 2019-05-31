@@ -1,21 +1,15 @@
-import { Task, ITaskProps } from "./Task";
+import { AtomicTask } from "./Task";
 import { Result, IResultProps } from "../Result";
 
-export interface ITextTaskProps extends ITaskProps {
-}
-
-export class TextTask extends Task {
+export class TextTask extends AtomicTask {
   result: Result;
-  constructor(props: ITextTaskProps) {
-    super(props)
-  }
 
   public handle = () => {
     const { left, right, path } = this
     this.setResult({ left, right, path })
   }
 
-  private setResult(props: IResultProps) {
+  public setResult = (props: IResultProps): void => {
     if (props.left === props.right) {
       return
     }

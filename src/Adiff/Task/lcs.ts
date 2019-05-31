@@ -3,12 +3,12 @@ export interface IEqualFunc {
 }
 
 const lengthMatrix = (
-  array1: any[],
-  array2: any[],
+  arr1: any[],
+  arr2: any[],
   isEqual: IEqualFunc
 ) => {
-  const len1 = array1.length;
-  const len2 = array2.length;
+  const len1 = arr1.length;
+  const len2 = arr2.length;
 
   // initialize empty matrix of (len1 + 1) * (len2 + 1)
   const matrix = Array.from(
@@ -18,7 +18,7 @@ const lengthMatrix = (
 
   for (let i = 1; i <= len1; i++) {
     for (let j = 1; j <= len2; j++) {
-      const temp = isEqual(array1[i - 1], array2[j - 1])
+      const temp = isEqual(arr1[i - 1], arr2[j - 1])
         ? matrix[i][j] = matrix[i - 1][j - 1] + 1
         : Math.max(matrix[i - 1][j], matrix[i][j - 1]);
       matrix[i][j] = temp
@@ -30,56 +30,56 @@ const lengthMatrix = (
 
 const backtrack = (
   matrix: number[][],
-  array1: any[],
-  array2: any[],
-  index1: number,
-  index2: number,
+  arr1: any[],
+  arr2: any[],
+  i1: number,
+  i2: number,
   isEqual: IEqualFunc
 ): {
-  sequence: any[],
-  indices1: number[],
-  indices2: number[]
+  seq: any[],
+  idxs1: number[],
+  idxs2: number[]
 } => {
-  if (index1 === 0 || index2 === 0) {
+  if (i1 === 0 || i2 === 0) {
     return {
-      sequence: [],
-      indices1: [],
-      indices2: [],
+      seq: [],
+      idxs1: [],
+      idxs2: [],
     };
   }
 
-  if (isEqual(array1[index1 - 1], array2[index2 - 1])) {
+  if (isEqual(arr1[i1 - 1], arr2[i2 - 1])) {
     const sub = backtrack(
       matrix,
-      array1,
-      array2,
-      index1 - 1,
-      index2 - 1,
+      arr1,
+      arr2,
+      i1 - 1,
+      i2 - 1,
       isEqual,
     );
-    sub.sequence.push(array1[index1 - 1]);
-    sub.indices1.push(index1 - 1);
-    sub.indices2.push(index2 - 1);
+    sub.seq.push(arr1[i1 - 1]);
+    sub.idxs1.push(i1 - 1);
+    sub.idxs2.push(i2 - 1);
     return sub;
   }
 
-  return matrix[index1][index2 - 1] > matrix[index1 - 1][index2]
-    ? backtrack(matrix, array1, array2, index1, index2 - 1, isEqual)
-    : backtrack(matrix, array1, array2, index1 - 1, index2, isEqual);
+  return matrix[i1][i2 - 1] > matrix[i1 - 1][i2]
+    ? backtrack(matrix, arr1, arr2, i1, i2 - 1, isEqual)
+    : backtrack(matrix, arr1, arr2, i1 - 1, i2, isEqual);
 }
 
 export const getLCS = (
-  array1: any[],
-  array2: any[],
+  arr1: any[],
+  arr2: any[],
   isEqual: IEqualFunc
 ) => {
-  const matrix = lengthMatrix(array1, array2, isEqual)
+  const matrix = lengthMatrix(arr1, arr2, isEqual)
   return backtrack(
     matrix,
-    array1,
-    array2,
-    array1.length,
-    array2.length,
+    arr1,
+    arr2,
+    arr1.length,
+    arr2.length,
     isEqual
   )
 }

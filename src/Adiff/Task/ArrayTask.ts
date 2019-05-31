@@ -1,6 +1,7 @@
-import { Task, ITaskProps, AssignableTask } from "./Task";
-import { ObjectTask } from "./ObjectTask";
-import { TextTask, PrimitiveTask } from ".";
+import { ITaskProps, AssignableTask } from "./Task";
+import { ObjectTask } from './ObjectTask'
+import { PrimitiveTask } from './PrimitiveTask'
+import { TextTask } from './TextTask'
 import { getLCS } from './LCS'
 export interface IArrayTaskProps extends ITaskProps {
   type: string
@@ -19,25 +20,21 @@ export class ArrayTask extends AssignableTask {
   public handle = () => {
     let unMatchHead = 0;
     let unMatchTail = 0;
-    let index;
-    let index1;
-    let index2;
-    let array1 = this.left;
-    let array2 = this.right;
-    let len1 = array1.length;
-    let len2 = array2.length;
+    let arr1 = this.left;
+    let arr2 = this.right;
+    let len1 = arr1.length;
+    let len2 = arr2.length;
 
     // find head of uncommon part
     while (
       unMatchHead < len1 &&
       unMatchHead < len2 &&
-      this.isItemsMatch(array1[unMatchHead], array2[unMatchHead])
+      this.isItemsMatch(arr1[unMatchHead], arr2[unMatchHead])
     ) {
-      index = unMatchHead
       this.assignNewTask({
-        left: array1[index],
-        right: array2[index],
-        type: index
+        left: arr1[unMatchHead],
+        right: arr2[unMatchHead],
+        type: '' + unMatchHead
       })
       unMatchHead++
     }
@@ -46,77 +43,71 @@ export class ArrayTask extends AssignableTask {
     while (
       unMatchHead + unMatchTail < len1 &&
       unMatchHead + unMatchTail < len2 &&
-      this.isItemsMatch(
-        array1[len1 - 1 - unMatchTail],
-        array2[len2 - 1 - unMatchTail]
-      )
+      this.isItemsMatch(arr1[len1 - 1 - unMatchTail], arr2[len2 - 1 - unMatchTail])
     ) {
-      index1 = len1 - 1 - unMatchTail
-      index2 = len2 - 1 - unMatchTail;
+      const i1 = len1 - 1 - unMatchTail
+      const i2 = len2 - 1 - unMatchTail
       this.assignNewTask({
-        left: array1[index1],
-        right: array2[index2],
-        type: index2
+        left: arr1[i1],
+        right: arr2[i2],
+        type: '' + i2
       })
       unMatchTail++
     }
 
-    // handle match part
     // case: arrays are identical
     if (unMatchHead + unMatchTail === len1 && len1 === len2) {
       return
     }
 
-    // case: only add items
+    // handle match part #1
+    // case 1-1: only add items
     if (unMatchHead + unMatchTail === len1) {
-      for (let index = unMatchHead; index < len2 - unMatchTail; index++) {
-        this.assignNewTask({
-          left: undefined,
-          right: array2[index],
-          type: '' + index
-        })
+      for (let i = unMatchHead; i < len2 - unMatchTail; i++) {
+        this.assignNewAddTask(i)
       }
       return
     }
-
-    // case: only remove items
+    // case 1-2: only remove items
     if (unMatchHead + unMatchTail === len2) {
-      for (let index = unMatchHead; index < len1 - unMatchTail; index++) {
-        this.assignNewTask({
-          left: array1[index],
-          right: undefined,
-          type: '' + index
-        })
+      for (let i = unMatchHead; i < len1 - unMatchTail; i++) {
+        this.assignNewRemoveTask(i)
       }
       return
     }
 
-    // handle match part
-    const unMatchPart1 = array1.slice(unMatchHead, len1 - unMatchTail)
-    const unMatchPart2 = array2.slice(unMatchHead, len2 - unMatchTail)
-
+    // handle match part #2
+    const unMatchPart1 = arr1.slice(unMatchHead, len1 - unMatchTail)
+    const unMatchPart2 = arr2.slice(unMatchHead, len2 - unMatchTail)
     const LCS = getLCS(unMatchPart1, unMatchPart2, this.isItemsMatch);
-
-    // case: remove in unmatch part
+    // case 2-1: remove in unmatch part
     for (let i = unMatchHead; i < len1 - unMatchTail; i++) {
-      if (!LCS.indices1.includes(i - unMatchHead)) {
-        this.assignNewTask({
-          left: array1[i],
-          right: undefined,
-          type: '' + i
-        })
+      if (!LCS.idxs1.includes(i - unMatchHead)) {
+        this.assignNewRemoveTask(i)
       }
     }
-
+    // case 2-2: add in unmatch part
     for (let i = unMatchHead; i < len2 - unMatchTail; i++) {
-      if (!LCS.indices2.includes(i - unMatchHead)) {
-        this.assignNewTask({
-          left: undefined,
-          right: array2[i],
-          type: '' + i
-        })
+      if (!LCS.idxs2.includes(i - unMatchHead)) {
+        this.assignNewAddTask(i)
       }
     }
+  }
+
+  private assignNewAddTask = (i: number) => {
+    this.assignNewTask({
+      left: undefined,
+      right: this.right[i],
+      type: '' + i
+    })
+  }
+
+  private assignNewRemoveTask = (i: number) => {
+    this.assignNewTask({
+      left: this.left[i],
+      right: undefined,
+      type: '' + i
+    })
   }
 
   private assignNewTask = (props: ITaskProps) => {

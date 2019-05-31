@@ -1,3 +1,5 @@
+import { IResultProps } from "../Result";
+
 export interface ITaskProps {
   left: any,
   right: any,
@@ -20,8 +22,6 @@ export abstract class Task {
     this.children = []
     this.path = []
   }
-
-  public handle = (): void => { }
 
   protected getLastChild = () => {
     if (!this.children.length) {
@@ -90,5 +90,5 @@ export abstract class AssignableTask extends Task {
 }
 
 export abstract class AtomicTask extends Task {
-
+  public setResult = (props: IResultProps): void => { }
 }
