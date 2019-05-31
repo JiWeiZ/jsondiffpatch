@@ -28,7 +28,7 @@ export class ObjectTask extends Task {
     child.path = this.path.concat(key)
   }
 
-  public handle = () => {
+  public handle = (): void => {
     const { left, right, omitKeys } = this
 
     for (let key of Object.keys(right)) {

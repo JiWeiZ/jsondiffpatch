@@ -1,7 +1,7 @@
 import { Task, ITaskProps } from "./Task";
 import { ObjectTask } from "./ObjectTask";
 import { TextTask, PrimitiveTask } from ".";
-import lcs from './lcs'
+import { getLCS } from './LCS'
 export interface IArrayTaskProps extends ITaskProps {
   type: string
   itemIdentifier?: string
@@ -78,6 +78,7 @@ export class ArrayTask extends Task {
       unMatchTail++
     }
 
+    // handle match part
     // case: arrays are identical
     if (unMatchHead + unMatchTail === len1 && len1 === len2) {
       return
@@ -107,76 +108,20 @@ export class ArrayTask extends Task {
       return
     }
 
-    // case: add, remove, and edit
+    // handle match part
     const unMatchPart1 = array1.slice(unMatchHead, len1 - unMatchTail)
     const unMatchPart2 = array2.slice(unMatchHead, len2 - unMatchTail)
 
-    let seq = this.getLCS(unMatchPart1, unMatchPart2);
+    const LCS = getLCS(unMatchPart1, unMatchPart2, this.isItemsMatch);
 
+    //
 
+    for (let i = unMatchHead; i < len1 - unMatchTail; i++) {
 
-
-  }
-
-  private lengthMatrix = (array1: any[], array2: any[]) => {
-    const len1 = array1.length;
-    const len2 = array2.length;
-
-    // initialize empty matrix of (len1 + 1) * (len2 + 1)
-    const matrix = Array.from(
-      { length: len1 + 1 },
-      () => Array.from({ length: len2 + 1 }, () => 0)
-    )
-
-    for (let i = 1; i <= len1; i++) {
-      for (let j = 1; j <= len2; j++) {
-        const temp = this.isItemsMatch(array1[i - 1], array2[j - 1])
-          ? matrix[i][j] = matrix[i - 1][j - 1] + 1
-          : Math.max(matrix[i - 1][j], matrix[i][j - 1]);
-        matrix[i][j] = temp
-      }
     }
 
-    return matrix
-  }
 
-  private backtrack = (matrix, array1, array2, index1, index2) => {
-    if (index1 === 0 || index2 === 0) {
-      return {
-        sequence: [],
-        indices1: [],
-        indices2: [],
-      };
-    }
 
-    if (this.isItemsMatch(array1[index1], array2[index2])) {
-      const sub = this.backtrack(
-        matrix,
-        array1,
-        array2,
-        index1 - 1,
-        index2 - 1,
-      );
-      sub.sequence.push(array1[index1 - 1]);
-      sub.indices1.push(index1 - 1);
-      sub.indices2.push(index2 - 1);
-      return sub;
-    }
-
-    return matrix[index1][index2 - 1] > matrix[index1 - 1][index2]
-      ? this.backtrack(matrix, array1, array2, index1, index2 - 1)
-      : this.backtrack(matrix, array1, array2, index1 - 1, index2);
-  }
-
-  private getLCS = (array1, array2) => {
-    const matrix = this.lengthMatrix(array1, array2)
-    return this.backtrack(
-      matrix,
-      array1,
-      array2,
-      array1.length,
-      array2.length
-    )
   }
 
   private assignNewTask = (

@@ -1,39 +1,45 @@
-/*
+export interface IEqualFunc {
+  (e1: any, e2: any): boolean
+}
 
-LCS implementation that supports arrays or strings
-
-reference: http://en.wikipedia.org/wiki/Longest_common_subsequence_problem
-
-*/
-
-
-const lengthMatrix = function(array1, array2) {
+const lengthMatrix = (
+  array1: any[],
+  array2: any[],
+  isEqual: IEqualFunc
+) => {
   const len1 = array1.length;
   const len2 = array2.length;
-  let x, y;
 
-  // initialize empty matrix of len1+1 x len2+1
-  let matrix = [len1 + 1];
-  for (x = 0; x < len1 + 1; x++) {
-    matrix[x] = [len2 + 1];
-    for (y = 0; y < len2 + 1; y++) {
-      matrix[x][y] = 0;
+  // initialize empty matrix of (len1 + 1) * (len2 + 1)
+  const matrix = Array.from(
+    { length: len1 + 1 },
+    () => Array.from({ length: len2 + 1 }, () => 0)
+  )
+
+  for (let i = 1; i <= len1; i++) {
+    for (let j = 1; j <= len2; j++) {
+      const temp = isEqual(array1[i - 1], array2[j - 1])
+        ? matrix[i][j] = matrix[i - 1][j - 1] + 1
+        : Math.max(matrix[i - 1][j], matrix[i][j - 1]);
+      matrix[i][j] = temp
     }
   }
-  // save sequence lengths for each coordinate
-  for (x = 1; x < len1 + 1; x++) {
-    for (y = 1; y < len2 + 1; y++) {
-      if (match(array1, array2, x - 1, y - 1, context)) {
-        matrix[x][y] = matrix[x - 1][y - 1] + 1;
-      } else {
-        matrix[x][y] = Math.max(matrix[x - 1][y], matrix[x][y - 1]);
-      }
-    }
-  }
-  return matrix;
-};
 
-const backtrack = function(matrix, array1, array2, index1, index2, context = '') {
+  return matrix
+}
+
+const backtrack = (
+  matrix: number[][],
+  array1: any[],
+  array2: any[],
+  index1: number,
+  index2: number,
+  isEqual: IEqualFunc
+): {
+  sequence: any[],
+  indices1: number[],
+  indices2: number[]
+} => {
   if (index1 === 0 || index2 === 0) {
     return {
       sequence: [],
@@ -42,49 +48,38 @@ const backtrack = function(matrix, array1, array2, index1, index2, context = '')
     };
   }
 
-  if (matrix.match(array1, array2, index1 - 1, index2 - 1, context)) {
-    const subsequence = backtrack(
+  if (isEqual(array1[index1 - 1], array2[index2 - 1])) {
+    const sub = backtrack(
       matrix,
       array1,
       array2,
       index1 - 1,
       index2 - 1,
-      context
+      isEqual,
     );
-    subsequence.sequence.push(array1[index1 - 1]);
-    subsequence.indices1.push(index1 - 1);
-    subsequence.indices2.push(index2 - 1);
-    return subsequence;
+    sub.sequence.push(array1[index1 - 1]);
+    sub.indices1.push(index1 - 1);
+    sub.indices2.push(index2 - 1);
+    return sub;
   }
 
-  if (matrix[index1][index2 - 1] > matrix[index1 - 1][index2]) {
-    return backtrack(matrix, array1, array2, index1, index2 - 1, context);
-  } else {
-    return backtrack(matrix, array1, array2, index1 - 1, index2, context);
-  }
-};
+  return matrix[index1][index2 - 1] > matrix[index1 - 1][index2]
+    ? backtrack(matrix, array1, array2, index1, index2 - 1, isEqual)
+    : backtrack(matrix, array1, array2, index1 - 1, index2, isEqual);
+}
 
-const get = function(array1, array2, match, context) {
-  const innerContext = context || {};
-  const matrix = lengthMatrix(
-    array1,
-    array2,
-    innerContext
-  );
-  const result = backtrack(
+export const getLCS = (
+  array1: any[],
+  array2: any[],
+  isEqual: IEqualFunc
+) => {
+  const matrix = lengthMatrix(array1, array2, isEqual)
+  return backtrack(
     matrix,
     array1,
     array2,
     array1.length,
     array2.length,
-    innerContext
-  );
-  if (typeof array1 === 'string' && typeof array2 === 'string') {
-    result.sequence = result.sequence.join('');
-  }
-  return result;
-};
-
-export default {
-  get: get,
-};
+    isEqual
+  )
+}

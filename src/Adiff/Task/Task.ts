@@ -18,10 +18,10 @@ export abstract class Task {
     this.path = []
   }
 
-  public handle(): void {
+  public handle = (): void => {
   }
 
-  protected getLastChild() {
+  protected getLastChild = () => {
     if (!this.children.length) {
       return
     }
@@ -37,7 +37,7 @@ export abstract class Task {
     return typeof target
   }
 
-  protected isItemsMatch(item1, item2, itemIdentifier = "id") {
+  protected isItemsMatch = (item1, item2, itemIdentifier = "id") => {
 
     // 2者强相等，必然匹配了
     if (item1 === item2) {
