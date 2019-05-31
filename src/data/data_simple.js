@@ -10,7 +10,7 @@ export const data1 = {
         "data": {
           "level": "title",
           "style": {
-            "textAlign": "center"
+            "textAlign": "right"
           }
         },
         "nodes": [
@@ -20,7 +20,24 @@ export const data1 = {
             "leaves": [
               {
                 "id": "bulb-leaf-1",
-                "text": "Bulb Editor",
+                "text": "BulbEditor",
+                "marks": [
+                  {
+                    "id": "bulb-mark-1",
+                    "type": "color",
+                    "value": "#000"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "bulb-text-2",
+            "type": "text",
+            "leaves": [
+              {
+                "id": "bulb-leaf-1",
+                "text": "BulbEsafsddsfditor",
                 "marks": [
                   {
                     "id": "bulb-mark-1",

@@ -7,6 +7,11 @@ const manager = new Manager()
 const results = manager.diff(data1, data2)
 console.log(results)
 
-const jsondiff = create(options)
-const delta = jsondiff.diff(data1, data2)
-document.body.innerHTML = JSON.stringify(delta)
+const json = {
+  results
+}
+
+// const jsondiff = create(options)
+// const delta = jsondiff.diff(data1, data2)
+// document.body.innerHTML = JSON.stringify(delta)
+document.body.innerHTML = JSON.stringify(json)
