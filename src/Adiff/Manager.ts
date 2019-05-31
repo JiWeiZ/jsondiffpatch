@@ -8,7 +8,6 @@ export class Manager {
   options: any;
   constructor(options) {
     this.results = []
-    // this.options = options
     managerOptions = options
   }
 
