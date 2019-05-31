@@ -3,6 +3,7 @@ import { ObjectTask } from './ObjectTask'
 import { PrimitiveTask } from './PrimitiveTask'
 import { TextTask } from './TextTask'
 import { getLCS } from './LCS'
+import { managerOptions } from '../Manager'
 export interface IArrayTaskProps extends ITaskProps {
   type: string
   itemIdentifier?: string
@@ -14,7 +15,7 @@ export class ArrayTask extends AssignableTask {
   constructor(props: IArrayTaskProps) {
     super(props)
     this.type = props.type
-    this.itemIdentifier = props.itemIdentifier || 'id'
+    this.itemIdentifier = managerOptions.arrayItemId[props.type] || 'id'
   }
 
   public handle = () => {
@@ -29,7 +30,7 @@ export class ArrayTask extends AssignableTask {
     while (
       unMatchHead < len1 &&
       unMatchHead < len2 &&
-      this.isItemsMatch(arr1[unMatchHead], arr2[unMatchHead])
+      this.isItemsMatch(arr1[unMatchHead], arr2[unMatchHead], this.itemIdentifier)
     ) {
       this.assignNewTask({
         left: arr1[unMatchHead],
@@ -43,7 +44,7 @@ export class ArrayTask extends AssignableTask {
     while (
       unMatchHead + unMatchTail < len1 &&
       unMatchHead + unMatchTail < len2 &&
-      this.isItemsMatch(arr1[len1 - 1 - unMatchTail], arr2[len2 - 1 - unMatchTail])
+      this.isItemsMatch(arr1[len1 - 1 - unMatchTail], arr2[len2 - 1 - unMatchTail], this.itemIdentifier)
     ) {
       const i1 = len1 - 1 - unMatchTail
       const i2 = len2 - 1 - unMatchTail

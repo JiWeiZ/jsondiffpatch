@@ -10,7 +10,7 @@ export const data1 = {
         "data": {
           "level": "title",
           "style": {
-            "textAlign": "right"
+            "textAlign": "center"
           }
         },
         "nodes": [
@@ -23,26 +23,8 @@ export const data1 = {
                 "text": "BulbEditor",
                 "marks": [
                   {
-                    "id": "bulb-mark-1",
                     "type": "color",
-                    "value": "#000"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "id": "bulb-text-2",
-            "type": "text",
-            "leaves": [
-              {
-                "id": "bulb-leaf-1",
-                "text": "BulbEsafsddsfditor",
-                "marks": [
-                  {
-                    "id": "bulb-mark-1",
-                    "type": "color",
-                    "value": "#000"
+                    "value": "#ccc"
                   }
                 ]
               }
@@ -76,12 +58,11 @@ export const data2 = {
             "leaves": [
               {
                 "id": "bulb-leaf-1",
-                "text": "Bulb Editor",
+                "text": "BulbEditor",
                 "marks": [
                   {
-                    "id": "bulb-mark-1",
                     "type": "color",
-                    "value": "#ccc"
+                    "value": "#000"
                   }
                 ]
               }

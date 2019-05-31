@@ -23,6 +23,8 @@ export abstract class Task {
     this.path = []
   }
 
+  public handle = () => {}
+
   protected getLastChild = () => {
     if (!this.children.length) {
       return

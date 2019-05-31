@@ -1,18 +1,22 @@
 import { Task, PrimitiveTask, TextTask, ObjectTask } from "./Task";
 import { Result } from "./Result";
 
+let managerOptions
+
 export class Manager {
   results: Result[];
-  constructor() {
+  options: any;
+  constructor(options) {
     this.results = []
+    // this.options = options
+    managerOptions = options
   }
 
   public diff(left, right) {
     const task = new ObjectTask({
       left,
       right,
-      type: "data",
-      omitKeys: ["type", "id", "readonly"]
+      type: "data"
     })
     this.hanlde(task)
     return this.results
@@ -28,4 +32,8 @@ export class Manager {
       task = task.next
     } while (task)
   }
+}
+
+export {
+  managerOptions
 }
