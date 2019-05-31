@@ -15,9 +15,16 @@ export class PrimitiveTask extends Task {
   }
 
   private setResult(props: IResultProps) {
-    if (props.left === props.right) {
+    const { left, right } = props
+
+    if (
+      this.getType(left) === 'array' && this.getType(right) === 'array' ||
+      this.getType(left) === 'object' && this.getType(right) === 'object' ||
+      this.isItemsMatch(left, right)
+    ) {
       return
     }
+
     this.result = new Result(props)
   }
 }

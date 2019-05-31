@@ -17,13 +17,14 @@ export class ObjectTask extends Task {
     this.omitKeys = props.omitKeys || []
   }
 
-  public assignToSub = (child: Task) => {
+  public assignToSub = (child: Task, key: string) => {
     this.setChildNext(child)
+    this.setChildPath(child, key)
     this.children.push(child)
     return this
   }
 
-  public setChildPath = (child: Task, key: string): void => {
+  private setChildPath = (child: Task, key: string): void => {
     child.path = this.path.concat(key)
   }
 
@@ -66,8 +67,7 @@ export class ObjectTask extends Task {
         })
       }
 
-      this.assignToSub(newTask)
-      this.setChildPath(newTask, key)
+      this.assignToSub(newTask, key)
     }
 
     for (let key of Object.keys(left)) {
@@ -84,8 +84,7 @@ export class ObjectTask extends Task {
           left: leftValue,
           right: rightValue
         })
-        this.assignToSub(newTask)
-        this.setChildPath(newTask, key)
+        this.assignToSub(newTask, key)
       }
     }
   }
