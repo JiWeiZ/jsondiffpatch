@@ -114,10 +114,15 @@ export class ArrayTask extends Task {
 
     const LCS = getLCS(unMatchPart1, unMatchPart2, this.isItemsMatch);
 
-    //
-
+    // case: remove in unmatch part
     for (let i = unMatchHead; i < len1 - unMatchTail; i++) {
-
+      if (!LCS.indices1.includes(i - unMatchHead)) {
+        this.assignNewTask({
+          left: array1[index],
+          right: undefined,
+          type: '' + index
+        })
+      }
     }
 
 
