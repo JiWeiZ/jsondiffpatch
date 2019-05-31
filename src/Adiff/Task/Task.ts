@@ -1,6 +1,9 @@
 export interface ITaskProps {
   left: any,
   right: any,
+  type?: string,
+  omitKeys?: string[],
+  itemIdentifier?: string
 }
 
 export abstract class Task {
@@ -18,8 +21,7 @@ export abstract class Task {
     this.path = []
   }
 
-  public handle = (): void => {
-  }
+  public handle = (): void => { }
 
   protected getLastChild = () => {
     if (!this.children.length) {
@@ -67,4 +69,26 @@ export abstract class Task {
         : JSON.stringify(item1) === JSON.stringify(item2)
     }
   }
+}
+
+export abstract class AssignableTask extends Task {
+  protected assignToSub = (child: Task, key: string) => {
+    this.setChildNext(child)
+    this.setChildPath(child, key)
+    this.children.push(child)
+  }
+
+  private setChildNext = (child: Task) => {
+    const target = this.children.length ? this.getLastChild() : this
+    child.next = target.next
+    target.next = child
+  }
+
+  private setChildPath = (child: Task, key: string): void => {
+    child.path = this.path.concat(key)
+  }
+}
+
+export abstract class AtomicTask extends Task {
+
 }

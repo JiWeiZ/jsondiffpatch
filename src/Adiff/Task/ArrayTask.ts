@@ -1,4 +1,4 @@
-import { Task, ITaskProps } from "./Task";
+import { Task, ITaskProps, AssignableTask } from "./Task";
 import { ObjectTask } from "./ObjectTask";
 import { TextTask, PrimitiveTask } from ".";
 import { getLCS } from './LCS'
@@ -7,30 +7,13 @@ export interface IArrayTaskProps extends ITaskProps {
   itemIdentifier?: string
 }
 
-export class ArrayTask extends Task {
+export class ArrayTask extends AssignableTask {
   type: string;
   itemIdentifier: string;
   constructor(props: IArrayTaskProps) {
     super(props)
     this.type = props.type
     this.itemIdentifier = props.itemIdentifier || 'id'
-  }
-
-  public assignToSub = (child: Task, key: string) => {
-    this.setChildNext(child)
-    this.setChildPath(child, key)
-    this.children.push(child)
-    return this
-  }
-
-  private setChildNext(child: Task) {
-    const target = this.children.length ? this.getLastChild() : this
-    child.next = target.next
-    target.next = child
-  }
-
-  private setChildPath(child: Task, key: string): void {
-    child.path = this.path.concat(key)
   }
 
   public handle = () => {
@@ -136,56 +119,30 @@ export class ArrayTask extends Task {
     }
   }
 
-  private assignNewTask = (
-    props: {
-      left: any,
-      right: any,
-      type: string
-    }
-  ) => {
+  private assignNewTask = (props: ITaskProps) => {
     const newTask = this.getNewTask(props)
     this.assignToSub(newTask, props.type)
   }
 
-  private getNewTask = (
-    props: {
-      left: any,
-      right: any,
-      type: string
-    }
-  ) => {
+  private getNewTask = (props: ITaskProps) => {
     const { left, right } = props
     const leftType = this.getType(left)
     const rightType = this.getType(right)
 
     if (leftType === "object" && rightType === "object") {
       const { type } = props
-      return new ObjectTask({
-        left,
-        right,
-        type
-      })
+      return new ObjectTask({ left, right, type })
     }
 
     if (leftType === "array" && rightType === "array") {
       const { type } = props
-      return new ArrayTask({
-        left,
-        right,
-        type
-      })
+      return new ArrayTask({ left, right, type })
     }
 
     if (leftType === "string" && rightType === "string") {
-      return new TextTask({
-        left,
-        right
-      })
+      return new TextTask({ left, right })
     }
 
-    return new PrimitiveTask({
-      left,
-      right
-    })
+    return new PrimitiveTask({ left, right })
   }
 }
