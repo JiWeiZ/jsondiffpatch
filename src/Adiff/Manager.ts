@@ -7,7 +7,6 @@ let managerOptions
 export class Manager {
   results: Result[];
   options: any;
-  diffInlineBlocks: any[];
   data1: any;
   data2: any;
   union: any;
@@ -18,7 +17,6 @@ export class Manager {
     this.results = []
     this.leaves = {}
     this.blocks = {}
-    this.diffInlineBlocks = []
     this.dmp = new DMP()
     managerOptions = options
   }
@@ -93,14 +91,28 @@ export class Manager {
     } while (task)
   }
 
-  private handleBlock = (blockPath, left, right) => {
-    const pathStr = blockPath.join('-')
+  private handleBlock = (path, left, right) => {
+    // const pathStr = blockPath.join('-')
 
-    this.blocks[pathStr] = this.blocks[pathStr] || {}
-    this.blocks[pathStr] = {
-      left: left == undefined ? left : this.getElm(blockPath, this.data1),
-      right: right == undefined ? right : this.getElm(blockPath, this.data2)
+    // this.blocks[pathStr] = this.blocks[pathStr] || {}
+    // this.blocks[pathStr] = {
+    //   left: left == undefined ? left : this.getElm(blockPath, this.data1),
+    //   right: right == undefined ? right : this.getElm(blockPath, this.data2)
+    // }
+
+    let block
+    const blockPath = path.concat()
+    if (left && !right) {
+      // delete leaf
+      blockPath[blockPath.length - 1] += '_'
+      block = left
+    } else {
+      // add leaf
+      block = right
     }
+    const blockPathStr = blockPath.join('-')
+    this.blocks[blockPathStr] = block
+
   }
 
   private handleMark = (leafPath, marksPath) => {
@@ -122,22 +134,23 @@ export class Manager {
 
   private handleLeaf = (path, left, right) => {
     let leaf
+    const leafPath = path.concat()
     if (left && !right) {
       // delete leaf
-      path[length - 1] += '_'
+      leafPath[leafPath.length - 1] += '_'
       leaf = left
     } else {
       // add leaf
       leaf = right
     }
-    const pathStr = path.join('-')
+    const leafPathStr = leafPath.join('-')
 
-    if (this.isBlockHandled(pathStr)) {
-      delete this.leaves[pathStr]
+    if (this.isBlockHandled(leafPathStr)) {
+      delete this.leaves[leafPathStr]
       return
     }
 
-    this.leaves[pathStr] = leaf
+    this.leaves[leafPathStr] = leaf
   }
 
   private handleText = (path, left, right) => {
