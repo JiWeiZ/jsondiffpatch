@@ -93,6 +93,17 @@ export class ArrayTask extends AssignableTask {
         this.assignNewAddTask(i)
       }
     }
+    // case 2-3: assign task about seq of lcs
+    for (let i = 0; i < LCS.idxs1.length; i++) {
+      const idxOfArr1 = LCS.idxs1[i] + unMatchHead
+      const idxOfArr2 = LCS.idxs2[i] + unMatchHead
+
+      this.assignNewTask({
+        left: arr1[idxOfArr1],
+        right: arr2[idxOfArr2],
+        type: '' + idxOfArr2
+      })
+    }
   }
 
   private assignNewAddTask = (i: number) => {
