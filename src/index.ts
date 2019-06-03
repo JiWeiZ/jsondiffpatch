@@ -12,6 +12,6 @@ const opts = {
 }
 
 const manager = new Manager(opts)
-const results = manager.diff(data1.document, data2.document)
+const results = manager.diff(data1, data2)
 manager.parese()
-document.body.innerHTML = JSON.stringify({ results })
+document.body.innerHTML = JSON.stringify(manager.union)

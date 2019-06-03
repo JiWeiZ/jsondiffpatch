@@ -2,6 +2,7 @@ import { Task, PrimitiveTask, TextTask, ObjectTask } from "./Task";
 import { Result } from "./Result";
 import DMP from 'diff-match-patch'
 import { deleteBgColor, addBgColor, deleteLine } from './constants'
+
 let managerOptions
 
 export class Manager {
@@ -79,7 +80,7 @@ export class Manager {
     console.log(this.leaves)
     console.log(this.blocks)
     this.fuse()
-    console.log(this.union)
+    // console.log(JSON.stringify(this.union))
   }
 
   private fuse = () => {
@@ -88,21 +89,18 @@ export class Manager {
       const leafValue = leafEntry[1]
       this.fuseLeaf(leafKey, leafValue)
     }
+
   }
 
-  private fuseLeaf = (leafKey, leafValue) => {
+  private fuseLeaf = (leafKey: string, leafValue) => {
 
     const isDelete = leafKey.endsWith('_')
 
     if (isDelete) {
       this.fuseDeletedLeaf(leafKey, leafValue)
     } else {
-      if (
-        leafValue.text &&
-        leafValue.marks &&
-        leafValue.marks.left &&
-        leafValue.marks.right
-      ) {
+
+      if (Array.isArray(leafValue.text)) {
         this.fuseText(leafKey, leafValue)
       }
 
@@ -112,6 +110,17 @@ export class Manager {
         leafValue.marks.right
       ) {
         this.fuseMark(leafKey, leafValue)
+      }
+
+      if (
+        !leafKey.endsWith('_') &&
+        leafValue.id
+      ) {
+        const leafPath = leafKey.split('-')
+        const leavesPath = leafPath.slice(0, leafPath.length - 1)
+        const { id } = leafValue
+        const leafRef = this.getElm(leavesPath, this.union).filter(e => e.id === id)[0]
+        this.markLeaf(leafRef, false)
       }
 
     }

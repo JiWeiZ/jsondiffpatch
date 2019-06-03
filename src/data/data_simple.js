@@ -78,55 +78,55 @@ export const data1 = {
               }
             ]
           },
-          {
-            "type": "block",
-            "id": "bulb-block-23",
-            "name": "image",
-            "data": {
-              "url": "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
-              "width": "450",
-              "height": "152",
-              "style": {
-                "backgroundColor": "rgba(0,0,0,0.1)",
-                "padding": 30
-              }
-            },
-            "nodes": [
-              {
-                "id": "bulb-text-1221",
-                "type": "text",
-                "leaves": [
-                  {
-                    "text": "google logo1",
-                    "id": "bulb-leaf-1221",
-                    "marks": [
-                      { "type": "title" }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "block",
-            "id": "bulb-block-334",
-            "name": "paragraph",
-            "data": {
-              "style": {
-                "textIndent": 20
-              }
-            },
-            "nodes": [
-              {
-                "type": "text",
-                "leaves": [
-                  {
-                    "text": "GOGOGO"
-                  }
-                ]
-              }
-            ]
-          }
+          // {
+          //   "type": "block",
+          //   "id": "bulb-block-23",
+          //   "name": "image",
+          //   "data": {
+          //     "url": "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
+          //     "width": "450",
+          //     "height": "152",
+          //     "style": {
+          //       "backgroundColor": "rgba(0,0,0,0.1)",
+          //       "padding": 30
+          //     }
+          //   },
+          //   "nodes": [
+          //     {
+          //       "id": "bulb-text-1221",
+          //       "type": "text",
+          //       "leaves": [
+          //         {
+          //           "text": "google logo1",
+          //           "id": "bulb-leaf-1221",
+          //           "marks": [
+          //             { "type": "title" }
+          //           ]
+          //         }
+          //       ]
+          //     }
+          //   ]
+          // },
+          // {
+          //   "type": "block",
+          //   "id": "bulb-block-334",
+          //   "name": "paragraph",
+          //   "data": {
+          //     "style": {
+          //       "textIndent": 20
+          //     }
+          //   },
+          //   "nodes": [
+          //     {
+          //       "type": "text",
+          //       "leaves": [
+          //         {
+          //           "text": "GOGOGO"
+          //         }
+          //       ]
+          //     }
+          //   ]
+          // }
         ]
       }
     ]
@@ -206,45 +206,45 @@ export const data2 = {
               }
             ]
           },
-          {
-            "type": "block",
-            "id": "bulb-block-23",
-            "name": "image",
-            "data": {
-              "url": "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
-              "width": "450",
-              "height": "152",
-              "style": {
-                "backgroundColor": "rgba(0,0,0,0.1)",
-                "padding": 30
-              }
-            },
-            "nodes": [
-              {
-                "id": "bulb-text-1221",
-                "type": "text",
-                "leaves": [
-                  {
-                    "text": "google image logo",
-                    "id": "bulb-leaf-1221",
-                    "marks": [
-                      { "type": "title" }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "block",
-            "id": "bulb-block-42323",
-            "name": "attachment",
-            "data": {
-              "url": "http://download.ydstatic.com/notewebsite/downloads/YNote.exe",
-              "fileName": "Google.png",
-              "fileLength": "13504"
-            }
-          }
+          // {
+          //   "type": "block",
+          //   "id": "bulb-block-23",
+          //   "name": "image",
+          //   "data": {
+          //     "url": "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
+          //     "width": "450",
+          //     "height": "152",
+          //     "style": {
+          //       "backgroundColor": "rgba(0,0,0,0.1)",
+          //       "padding": 30
+          //     }
+          //   },
+          //   "nodes": [
+          //     {
+          //       "id": "bulb-text-1221",
+          //       "type": "text",
+          //       "leaves": [
+          //         {
+          //           "text": "google image logo",
+          //           "id": "bulb-leaf-1221",
+          //           "marks": [
+          //             { "type": "title" }
+          //           ]
+          //         }
+          //       ]
+          //     }
+          //   ]
+          // },
+          // {
+          //   "type": "block",
+          //   "id": "bulb-block-42323",
+          //   "name": "attachment",
+          //   "data": {
+          //     "url": "http://download.ydstatic.com/notewebsite/downloads/YNote.exe",
+          //     "fileName": "Google.png",
+          //     "fileLength": "13504"
+          //   }
+          // }
         ]
       }
     ]
