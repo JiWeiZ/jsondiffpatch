@@ -1,7 +1,7 @@
 import { Task, PrimitiveTask, TextTask, ObjectTask } from "./Task";
 import { Result } from "./Result";
 import DMP from 'diff-match-patch'
-
+import { deleteBgColor, addBgColor, deleteLine } from './constants'
 let managerOptions
 
 export class Manager {
@@ -78,6 +78,235 @@ export class Manager {
     }
     console.log(this.leaves)
     console.log(this.blocks)
+    this.fuse()
+    console.log(this.union)
+  }
+
+  private fuse = () => {
+    for (let leafEntry of Object.entries(this.leaves)) {
+      const leafKey = leafEntry[0] as string
+      const leafValue = leafEntry[1]
+      this.fuseLeaf(leafKey, leafValue)
+    }
+  }
+
+  private fuseLeaf = (leafKey, leafValue) => {
+
+    const isDelete = leafKey.endsWith('_')
+
+    if (isDelete) {
+      this.fuseDeletedLeaf(leafKey, leafValue)
+    } else {
+      if (
+        leafValue.text &&
+        leafValue.marks &&
+        leafValue.marks.left &&
+        leafValue.marks.right
+      ) {
+        this.fuseText(leafKey, leafValue)
+      }
+
+      if (
+        leafValue.marks &&
+        leafValue.marks.left &&
+        leafValue.marks.right
+      ) {
+        this.fuseMark(leafKey, leafValue)
+      }
+
+    }
+
+  }
+
+  private getiDeleteBetween(iDelete: number, iList: number[]) {
+    const { length } = iList
+    let a: number
+    let b: number
+    for (let i = 0; i < length; i++) {
+      if (iList[i] < iDelete) {
+        a = iList[i]
+      }
+      if (iList[i] > iDelete) {
+        b = iList[i]
+      }
+    }
+    return [a, b]
+  }
+
+  private getInsertIdx(leafPath, leavesPath) {
+    // 获取新旧数据中leaves的引用
+    const leavesRefLeft = this.getElm(leavesPath, this.data1)
+    const leavesRefRight = this.getElm(leavesPath, this.data2)
+    const leavesRefUnion = this.getElm(leavesPath, this.union)
+    // 获取被删除leaf在原text的idx
+    const iDelete = leafPath[leafPath.length - 1]
+    const leavesPathStr = leavesPath.join('-')
+    const leaves = Object.keys(this.leaves).filter(e => e.startsWith(leavesPathStr))
+    // 找到旧text中哪些leaf被删了
+    const deleteLeafKeys = leaves.filter(e => e.endsWith('_'))
+    const deleteLeafIdxList = deleteLeafKeys.map(e => {
+      const arr = e.split('-')
+      return parseInt(arr[arr.length - 1])
+    })
+    // 找到旧text中没被删的leaf的idx集合
+    let keptLeafIdxList: number[] = []
+    for (let i = 0; i < leavesRefLeft.length; i++) {
+      if (!deleteLeafIdxList.includes(i)) {
+        keptLeafIdxList.push(i)
+      }
+    }
+    // 找到被删除的leaf夹在哪两个没被删除的leaf之间
+    const [iL, iR] = this.getiDeleteBetween(iDelete, keptLeafIdxList)
+
+    // 获取没删除的leaf在旧text和新text的索引
+    const regMove = /.*(\d+)<(\d+).*/
+    const reg = /.+-(\d+)/
+    const idxList = leaves
+      .filter(e => !e.endsWith('_'))
+      .map(e => {
+        const left = regMove.test(e)
+          ? parseInt(regMove.exec(e)[2])
+          : parseInt(reg.exec(e)[1])
+        const right = regMove.test(e)
+          ? parseInt(regMove.exec(e)[1])
+          : parseInt(reg.exec(e)[1])
+        return { left, right }
+      })
+
+    if (iR != undefined) {
+      // 找到iR对应的leaf在新text中的位置
+      const leafPathLeft = leavesPath.concat(iR + '')
+      const id = this.getElm(leafPathLeft, this.data1).id
+      // 新的leaf有可能分裂成几个leaf，选择第一个
+      for (let i = 0; i < leavesRefUnion.length; i++) {
+        const leaf = leavesRefUnion[i]
+        if (leaf.id === id || leaf.id === id + '-0') {
+          return i
+        }
+      }
+    }
+
+    if (iL != undefined) {
+      // 找到iL对应的leaf在新text中的位置
+      const leafPathLeft = leavesPath.concat(iL + '')
+      const id = this.getElm(leafPathLeft, this.data1).id
+      // 新的leaf有可能分裂成几个leaf，选择最后一个
+      const leaves = leavesRefUnion.filter(leaf => leaf.id.startsWith(id))
+      for (let i = 0; i < leaves.length; i++) {
+        const leaf = leaves[i]
+        if (
+          leaf.id === id ||
+          leaf.id === id + `-${leaves.length - 1}`
+        ) {
+          // splice是往前插，故 + 1
+          return i + 1
+        }
+      }
+    }
+
+    return 0
+  }
+
+  private fuseDeletedLeaf = (leafKey, leafValue) => {
+    const leafPath = leafKey.slice(0, leafKey.length - 1).split('-')
+    const leavesPath = leafPath.slice(0, leafPath.length - 1)
+    const leavesRef = this.getElm(leavesPath, this.union)
+    const idx = this.getInsertIdx(leafPath, leavesPath)
+    const leafDelete = Object.assign({}, leafValue, { id: leafValue.id + '-pre' })
+    this.markLeaf(leafDelete, true)
+    leavesRef.splice(idx, 0, leafDelete)
+  }
+
+
+  private fuseText = (leafKey, leafValue) => {
+    const leafPath = leafKey.split('-')
+    const leavesPath = leafPath.slice(0, leafPath.length - 1)
+    const leavesRef = this.getElm(leavesPath, this.union)
+    const targetId = this.getElm(leafPath, this.data2).id
+    const leafRef = leavesRef.filter(e => e.id === targetId)[0]
+    const idx = leavesRef.indexOf(leafRef)
+    const { text, marks } = leafValue
+    const baseLeafId = leafRef.id
+
+    const res = []
+    for (let i = 0; i < text.length; i++) {
+      const tag = text[i][0]
+      const str = text[i][1]
+
+      let leafMarks
+      if (marks) {
+        leafMarks = tag === -1 ? marks.left : marks.right
+      } else {
+        leafMarks = leafRef.marks
+      }
+
+      const leaf = {
+        id: `${baseLeafId}-${i}`,
+        text: str,
+        marks: leafMarks
+      }
+
+      if (tag === 1) {
+        this.markLeaf(leaf, false)
+      }
+
+      if (tag === -1) {
+        this.markLeaf(leaf, true)
+      }
+
+
+      res.push(leaf)
+    }
+
+    leavesRef.splice(idx, 1, ...res)
+  }
+
+  private fuseMark(leafKey, leafValue) {
+    // TODO
+    // 咋显示？
+  }
+
+  private markBlock = (block, isDelete) => {
+    block.data = block.data || {}
+    block.data.style = block.data.style || {}
+    if (isDelete) {
+      block.data.style.backgroundColor = deleteBgColor
+      block.data.style.textDecoration = deleteLine
+    } else {
+      block.data.style.backgroundColor = addBgColor
+
+    }
+  }
+
+  private markLeaf = (leaf, isDelete) => {
+    leaf.marks = leaf.marks || []
+
+    const marks = isDelete
+      ? [
+        {
+          type: "backgroundColor",
+          value: deleteBgColor
+        }, {
+          type: "textDecoration",
+          value: deleteLine
+        }
+      ]
+      : [
+        {
+          type: "backgroundColor",
+          value: addBgColor
+        }
+      ]
+
+    leaf.marks.forEach((e, i, arr) => {
+      if (e.type === "backgroundColor" ||
+        e.type === "textDecoration"
+      ) {
+        delete arr[i]
+      }
+    })
+
+    leaf.marks = leaf.marks.concat(marks)
   }
 
   private hanlde(task: Task) {
@@ -92,14 +321,6 @@ export class Manager {
   }
 
   private handleBlock = (path, left, right) => {
-    // const pathStr = blockPath.join('-')
-
-    // this.blocks[pathStr] = this.blocks[pathStr] || {}
-    // this.blocks[pathStr] = {
-    //   left: left == undefined ? left : this.getElm(blockPath, this.data1),
-    //   right: right == undefined ? right : this.getElm(blockPath, this.data2)
-    // }
-
     let block
     const blockPath = path.concat()
     if (left && !right) {
@@ -169,14 +390,24 @@ export class Manager {
   }
 
   private getElm(path: string[], rootTarget) {
+    const reg = /(\d+)<(\d+)/
     let res = { ...rootTarget }
-    const a = 1
+
     for (let i = 0; i < path.length; i++) {
       if (!res) {
         return
       }
-      res = res[path[i]]
+
+      const prop = reg.test(path[i])
+        ? rootTarget === this.data1
+          ? reg.exec(path[i])[2]
+          : reg.exec(path[i])[1]
+        : path[i]
+
+      res = res[prop]
     }
+
+
     return res
   }
 

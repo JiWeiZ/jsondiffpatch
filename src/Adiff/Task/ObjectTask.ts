@@ -35,7 +35,7 @@ export class ObjectTask extends AssignableTask {
         this.assignNewTask({
           left: this.left[key],
           right: this.right[key],
-          type: key
+          type: key,
         })
       }
     }
@@ -46,7 +46,7 @@ export class ObjectTask extends AssignableTask {
     const newTask = this.getNewTask({
       left: props.left,
       right: props.right,
-      type: props.type
+      type: props.type,
     })
     this.assignToSub(newTask, props.type)
   }

@@ -1,6 +1,8 @@
+
 export const data1 = {
   "document": {
     "title": "hello world",
+    "readonly": true,
     "type": "document",
     "nodes": [
       {
@@ -31,7 +33,7 @@ export const data1 = {
                     ]
                   },
                   {
-                    "id": "bulb-leaf-13123",
+                    "id": "bulb-leaf-3123",
                     "text": "还有emoji",
                     "marks": [
                       { "type": "italic" }
@@ -41,7 +43,8 @@ export const data1 = {
                     "id": "bulb-leaf-1",
                     "text": "以及表情",
                     "marks": [
-                      { "type": "italic" }
+                      { "type": "italic" },
+                      { "type": "color", "value": "blue" }
                     ]
                   },
                   {
@@ -133,6 +136,7 @@ export const data1 = {
 export const data2 = {
   "document": {
     "title": "hello world",
+    "readonly": true,
     "type": "document",
     "nodes": [
       {
@@ -175,28 +179,6 @@ export const data2 = {
                     "marks": [
                       { "type": "underline" }
                     ]
-                  },
-                  {
-                    "id": "bulb-inline-1",
-                    "type": "inline",
-                    "name": "emoji",
-                    "data": {
-                      "emoji": "😄"
-                    }
-                  },
-                  {
-                    "id": "bulb-text-3",
-                    "type": "text",
-                    "leaves": [
-                      {
-                        "id": "bulb-leaf-1",
-                        "text": "并在未来支持布局组件",
-                        "marks": [
-                          { "type": "fontFamily", "value": "SimSun, STSong" },
-                          { "type": "bold" }
-                        ]
-                      }
-                    ]
                   }
                 ]
               },
@@ -215,7 +197,10 @@ export const data2 = {
                   {
                     "id": "bulb-leaf-1",
                     "text": "并在未来支持布局插件",
-                    "marks": [{ "type": "fontFamily", "value": "kaiti" }]
+                    "marks": [
+                      { "type": "fontFamily", "value": "kaiti" },
+                      { "type": "bold"}
+                    ]
                   }
                 ]
               }
@@ -265,4 +250,3 @@ export const data2 = {
     ]
   }
 }
-

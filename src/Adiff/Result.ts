@@ -9,6 +9,7 @@ export class Result {
   left: any;
   right: any;
 
+
   constructor(props: IResultProps) {
     this.path = props.path
     this.left = props.left
