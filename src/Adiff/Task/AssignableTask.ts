@@ -1,9 +1,88 @@
-import { ITaskProps, AssignableTask } from "./Task";
-import { ObjectTask } from './ObjectTask'
-import { PrimitiveTask } from './PrimitiveTask'
-import { TextTask } from './TextTask'
-import { getLCS } from './LCS'
-import { managerOptions } from '../Manager'
+import { Task, ITaskProps } from "./Task";
+import { PrimitiveTask } from "./PrimitiveTask";
+import { managerOptions } from "../Manager";
+import { getLCS } from "./LCS";
+
+abstract class AssignableTask extends Task {
+  protected assignToSub = (child: Task, key: string) => {
+    this.setChildNext(child)
+    this.setChildPath(child, key)
+    this.children.push(child)
+  }
+
+  private setChildNext = (child: Task) => {
+    const target = this.children.length ? this.getLastChild() : this
+    child.next = target.next
+    target.next = child
+  }
+
+  private setChildPath = (child: Task, key: string): void => {
+    child.path = this.path.concat(key)
+  }
+
+  protected getNewTask = (props: ITaskProps): Task => {
+    const { left, right } = props
+    const leftType = this.getType(left)
+    const rightType = this.getType(right)
+
+    if (leftType === "object" && rightType === "object") {
+      const { type } = props
+      return new ObjectTask({ left, right, type })
+    }
+
+    if (leftType === "array" && rightType === "array") {
+      const { type } = props
+      return new ArrayTask({ left, right, type })
+    }
+
+    return new PrimitiveTask({ left, right })
+  }
+
+  protected assignNewTask = (props: ITaskProps) => {
+    const newTask = this.getNewTask(props)
+    this.assignToSub(newTask, props.type)
+  }
+}
+
+export interface IObjectTaskProps extends ITaskProps {
+  type: string
+  omitKeys?: string[]
+}
+
+export class ObjectTask extends AssignableTask {
+  type: string;
+  omitKeys: string[];
+  constructor(props: IObjectTaskProps) {
+    super(props)
+    this.type = props.type
+    this.omitKeys = props.omitKeys || []
+  }
+
+  public handle = (): void => {
+    const { left, right } = this
+    this.handleItem(left).handleItem(right)
+  }
+
+  public handleItem = (target) => {
+    for (let key of Object.keys(target)) {
+      if (this.omitKeys.includes(key)) {
+        continue
+      }
+
+      if (
+        target === this.left ||
+        target === this.right && this.right[key] === undefined
+      ) {
+        this.assignNewTask({
+          left: this.left[key],
+          right: this.right[key],
+          type: key,
+        })
+      }
+    }
+    return this
+  }
+}
 export interface IArrayTaskProps extends ITaskProps {
   type: string
   itemIdentifier?: string
@@ -105,8 +184,6 @@ export class ArrayTask extends AssignableTask {
     }
   }
 
-
-
   private assignNewAddTask = (i: number) => {
     this.assignNewTask({
       left: undefined,
@@ -122,31 +199,5 @@ export class ArrayTask extends AssignableTask {
       type: '' + i
     })
   }
-
-  private assignNewTask = (props: ITaskProps) => {
-    const newTask = this.getNewTask(props)
-    this.assignToSub(newTask, props.type)
-  }
-
-  private getNewTask = (props: ITaskProps) => {
-    const { left, right } = props
-    const leftType = this.getType(left)
-    const rightType = this.getType(right)
-
-    if (leftType === "object" && rightType === "object") {
-      const { type } = props
-      return new ObjectTask({ left, right, type })
-    }
-
-    if (leftType === "array" && rightType === "array") {
-      const { type } = props
-      return new ArrayTask({ left, right, type })
-    }
-
-    if (leftType === "string" && rightType === "string") {
-      return new TextTask({ left, right })
-    }
-
-    return new PrimitiveTask({ left, right })
-  }
 }
+

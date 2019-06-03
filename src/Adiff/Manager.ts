@@ -1,4 +1,4 @@
-import { Task, PrimitiveTask, TextTask, ObjectTask } from "./Task";
+import { Task, PrimitiveTask, ObjectTask } from "./Task";
 import { Result } from "./Result";
 import DMP from 'diff-match-patch'
 import { deleteBgColor, addBgColor, deleteLine } from './constants'
@@ -321,7 +321,7 @@ export class Manager {
   private hanlde(task: Task) {
     do {
       task.handle()
-      const res = (task as PrimitiveTask | TextTask).result
+      const res = (task as PrimitiveTask).result
       if (res) {
         this.results.push(res)
       }
