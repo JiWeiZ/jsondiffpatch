@@ -226,7 +226,6 @@ export class Manager {
     leavesRef.splice(idx, 0, leafDelete)
   }
 
-
   private fuseText = (leafKey, leafValue) => {
     const leafPath = leafKey.split('-')
     const leavesPath = leafPath.slice(0, leafPath.length - 1)
