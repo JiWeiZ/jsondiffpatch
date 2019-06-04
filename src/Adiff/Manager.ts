@@ -2,6 +2,7 @@ import { Task, PrimitiveTask, ObjectTask } from "./Task";
 import { Result } from "./Result";
 import DMP from 'diff-match-patch'
 import { deleteBgColor, addBgColor, deleteLine } from './constants'
+import FileSaver from 'file-saver';
 
 let managerOptions
 
