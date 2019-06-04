@@ -23,10 +23,6 @@ export abstract class Task {
 
   public handle = () => { }
 
-  protected getLastChild = () => {
-    return this.children.length ? this.children[this.children.length - 1] : undefined
-  }
-
   protected getType = (target: any) => {
     return typeof target === "object"
       ? Array.isArray(target) ? "array" : "object"

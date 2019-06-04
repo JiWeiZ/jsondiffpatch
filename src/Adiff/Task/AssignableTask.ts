@@ -4,6 +4,10 @@ import { managerOptions } from "../Manager";
 import { getLCS } from "./LCS";
 
 abstract class AssignableTask extends Task {
+  private getLastChild = () => {
+    return this.children.length ? this.children[this.children.length - 1] : undefined
+  }
+
   protected assignToSub = (child: Task, key: string) => {
     this.setChildNext(child)
     this.setChildPath(child, key)
@@ -200,4 +204,3 @@ export class ArrayTask extends AssignableTask {
     })
   }
 }
-
