@@ -2,7 +2,14 @@ import { Task, ITaskProps } from "./Task";
 import { PrimitiveTask } from "./PrimitiveTask";
 import { managerOptions } from "../Manager";
 import { getLCS } from "./LCS";
-
+export interface IObjectTaskProps extends ITaskProps {
+  type: string
+  omitKeys?: string[]
+}
+export interface IArrayTaskProps extends ITaskProps {
+  type: string
+  itemIdentifier?: string
+}
 abstract class AssignableTask extends Task {
   private getLastChild = () => {
     return this.children.length ? this.children[this.children.length - 1] : undefined
@@ -47,12 +54,6 @@ abstract class AssignableTask extends Task {
     this.assignToSub(newTask, props.type)
   }
 }
-
-export interface IObjectTaskProps extends ITaskProps {
-  type: string
-  omitKeys?: string[]
-}
-
 export class ObjectTask extends AssignableTask {
   type: string;
   omitKeys: string[];
@@ -87,11 +88,6 @@ export class ObjectTask extends AssignableTask {
     return this
   }
 }
-export interface IArrayTaskProps extends ITaskProps {
-  type: string
-  itemIdentifier?: string
-}
-
 export class ArrayTask extends AssignableTask {
   type: string;
   itemIdentifier: string;

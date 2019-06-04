@@ -11,14 +11,14 @@ export abstract class Task {
   right: any
   next: Task
   children: Task[]
-  path: string[];
+  path: string[]
 
   constructor(props: ITaskProps) {
     this.left = props.left
     this.right = props.right
-    this.next = null
     this.children = []
     this.path = []
+    this.next = null
   }
 
   public handle = () => { }

@@ -202,26 +202,26 @@ export class Manager {
     const leafPath = leafKey.slice(0, leafKey.length - 1).split('-')
     const leavesPath = leafPath.slice(0, leafPath.length - 1)
     const leavesRef = this.getElm(leavesPath, this.union)
-    const idx = this.getInsertIdx(leafPath, leavesPath)
+    const insertIdx = this.getInsertIdx(leafPath, leavesPath)
     const leafDelete = Object.assign({}, leafValue, { id: leafValue.id + '-pre' })
     this.markLeaf(leafDelete, true)
-    leavesRef.splice(idx, 0, leafDelete)
+    leavesRef.splice(insertIdx, 0, leafDelete)
   }
 
-  private getInsertIdx(leafPath, leavesPath) {
+  private getInsertIdx(leafPath, leavesPath): number {
     // 获取新旧数据中leaves的引用
     const leavesRefLeft = this.getElm(leavesPath, this.data1)
     const leavesRefUnion = this.getElm(leavesPath, this.union)
-    // 获取被删除leaf在原text的idx
+    // 获取被删除leaf在原数据中的idx
     const iDelete = leafPath[leafPath.length - 1]
+    // 找到旧text中哪些leaf被删了
     const leavesPathStr = leavesPath.join('-')
     const leaves = Object.keys(this.leaves).filter(e => e.startsWith(leavesPathStr))
-    // 找到旧text中哪些leaf被删了
     const deleteLeafIdxList = leaves.filter(e => e.endsWith('_')).map(e => {
       const arr = e.split('-')
       return parseInt(arr[arr.length - 1])
     })
-    // 找到旧text中没被删的leaf的idx集合
+    // 找到旧text中哪些leaf没被删
     const unDeleteLeafIdxList: number[] = []
     leavesRefLeft.forEach((e, i) => {
       !deleteLeafIdxList.includes(i) && unDeleteLeafIdxList.push(i)
@@ -234,6 +234,7 @@ export class Manager {
       e > iDelete && (iEnd = e)
     })
 
+    // 右侧有没被删的leaf，先以此为准；否则以左侧为准
     if (iEnd != undefined) {
       // 找到iEnd对应的leaf的id，新旧leaf的id相同
       const leafPathLeft = leavesPath.concat(iEnd + '')
@@ -246,7 +247,6 @@ export class Manager {
         }
       }
     }
-
     if (iStart != undefined) {
       const leafPathLeft = leavesPath.concat(iStart + '')
       const id = this.getElm(leafPathLeft, this.data1).id
@@ -263,8 +263,13 @@ export class Manager {
         }
       }
     }
-
-    return 0
+    // 左右皆无，返回leavesRefUnion中第一个没被删的idx
+    for (let i = 0; i < leavesRefUnion.length; i++) {
+      if (!leavesRefUnion[i].id.endsWith('pre')) {
+        return i
+      }
+    }
+    return leavesRefUnion.length
   }
 
   private fuseText = (leafKey, leafValue) => {
